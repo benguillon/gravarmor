@@ -1,9 +1,9 @@
-package fr.epsi.gravarmor.controller;
+package main.fr.epsi.gravarmor.controller;
 
-import fr.epsi.gravarmor.model.*;
-import fr.epsi.gravarmor.model.callback.ICoordinatesLIstener;
-import fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
-import fr.epsi.gravarmor.model.coordinates.Point;
+import main.fr.epsi.gravarmor.model.*;
+import main.fr.epsi.gravarmor.model.callback.ICoordinatesLIstener;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -14,8 +14,8 @@ import javafx.util.Duration;
 
 import java.util.EventListener;
 
-import static fr.epsi.gravarmor.controller.Launcher.HEXA_HEIGHT;
-import static fr.epsi.gravarmor.controller.Launcher.HEXA_WIDTH;
+import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_HEIGHT;
+import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_WIDTH;
 
 class LandController {
 
@@ -66,6 +66,7 @@ class LandController {
 
                 if(box.isSelected()) {
                     polygonNode.setOpacity(0.2);
+                    box.isSelected(false);
                 }
 
                 polygonNode.setOnMouseClicked(event -> {

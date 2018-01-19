@@ -1,11 +1,11 @@
-package fr.epsi.gravarmor.controller;
+package main.fr.epsi.gravarmor.controller;
 
-import fr.epsi.gravarmor.model.HexaLand;
-import fr.epsi.gravarmor.model.LandBox;
-import fr.epsi.gravarmor.model.Unit;
-import fr.epsi.gravarmor.model.UnitType;
-import fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
-import fr.epsi.gravarmor.model.coordinates.Point;
+import main.fr.epsi.gravarmor.model.HexaLand;
+import main.fr.epsi.gravarmor.model.LandBox;
+import main.fr.epsi.gravarmor.model.Unit;
+import main.fr.epsi.gravarmor.model.UnitType;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -31,7 +31,7 @@ public class Launcher extends Application {
         land = new HexaLand();
 
         try {
-            FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("fr/epsi/gravarmor/view/fxml/windowView.fxml"));
+            FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/windowView.fxml"));
             VBox windowView = windowLoader.load();
             windowController = windowLoader.getController();
             windowController.setStage(stage);
@@ -48,11 +48,11 @@ public class Launcher extends Application {
 
             stage.setScene(scene);
             stage.setTitle("Gravarmor");
-            stage.getIcons().add(new Image("fr/epsi/gravarmor/icons/appIcon.png"));
+            stage.getIcons().add(new Image("main/fr/epsi/gravarmor/icons/appIcon.png"));
             stage.show();
 
 
-            HexaCoordinates startUnitCoordinates = new HexaCoordinates(new Point(4,5));
+            HexaCoordinates startUnitCoordinates = new HexaCoordinates(new Point(5,11));
             Unit unit = new Unit(UnitType.INFANTRY);
             unit.setCoordinates(startUnitCoordinates);
             LandBox box = land.getBox(startUnitCoordinates);
@@ -78,10 +78,6 @@ public class Launcher extends Application {
                     land.getBox(path[i]).isSelected(true);
                 }
                 landController.drawLand();
-                for(int i = 0; i < path.length; i++) {
-                    System.out.println(path[i]);
-                    land.getBox(path[i]).isSelected(false);
-                }
             });
             landController.drawLand();
 

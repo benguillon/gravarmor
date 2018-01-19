@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.model.coordinates;
+package main.fr.epsi.gravarmor.model.coordinates;
 
 public class Cube {
 
@@ -46,25 +46,48 @@ public class Cube {
         return new Cube(x, y, z);
     }
 
-    private static int lerp(int a, int b, double t) {
+    public static Cube from(float x, float y, float z) {
 
-        //return (int)(a + (b - a)*t);
-        return (int) Math.round(a * (1-t) + b * t);
-    }
+        int rx = Math.round(x);
+        int ry = Math.round(y);
+        int rz = Math.round(z);
 
-    public static Cube lerp(Cube a, Cube b, double t) {
+        int x_diff = Math.abs((int)(rx - x));
+        int y_diff = Math.abs((int)(ry - y));
+        int z_diff = Math.abs((int)(rz - z));
 
-        int x = lerp(a.getX(), b.getX(), t);
-        int y = lerp(a.getY(), b.getY(), t);
-        int z = lerp(a.getZ(), b.getZ(), t);
+        if(x_diff > y_diff && x_diff > z_diff) {
 
-        if(x+y+z != 0) {
-            System.err.println("!= 0 " + a + " " + b + " : " + x + "-" + y + "-" + z);
+            rx = -ry-rz;
+        }
+        else if(y_diff > z_diff) {
 
-            //x = -y-z;
+            ry = -rx-rz;
+        }
+        else {
+
+            rz = -rx-ry;
         }
 
-        return new Cube(x, y, z);
+        return new Cube(rx, ry, rz);
+    }
+
+    private static float lerp(int a, int b, float t) {
+
+        return a * (1-t) + b * t;
+    }
+
+    public static Cube lerp(Cube a, Cube b, float t) {
+
+        float x = lerp(a.getX(), b.getX(), t);
+        float y = lerp(a.getY(), b.getY(), t);
+        float z = lerp(a.getZ(), b.getZ(), t);
+
+        if(x+y+z != 0) {
+            System.out.println("Coucou");
+        }
+
+        return Cube.from(x, y, z);
     }
 
     private static Cube direction(int direction) {
@@ -84,32 +107,6 @@ public class Cube {
                 a.getY() + b.getY(),
                 a.getZ()+ b.getZ()
         );
-    }
-
-    public static Cube round(Cube cube) {
-
-        int rx = Math.round(cube.getX());
-        int ry = Math.round(cube.getY());
-        int rz = Math.round(cube.getZ());
-
-        int x_diff = Math.abs(rx - cube.getX());
-        int y_diff = Math.abs(ry - cube.getY());
-        int z_diff = Math.abs(rz - cube.getZ());
-
-        if(x_diff > y_diff && x_diff > z_diff) {
-
-            rx = -ry-rz;
-        }
-        else if(y_diff > z_diff) {
-
-            ry = -rx-rz;
-        }
-        else {
-
-            rz = -rx-ry;
-        }
-
-        return new Cube(rx, ry, rz);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.model.coordinates;
+package main.fr.epsi.gravarmor.model.coordinates;
 
 public class Point {
 

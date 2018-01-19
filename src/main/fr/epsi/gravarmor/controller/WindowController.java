@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.controller;
+package main.fr.epsi.gravarmor.controller;
 
 import javafx.stage.Stage;
 

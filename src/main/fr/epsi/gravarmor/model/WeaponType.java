@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.model;
+package main.fr.epsi.gravarmor.model;
 
 public enum WeaponType {
     MISSILES(4, false),

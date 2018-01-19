@@ -1,4 +1,6 @@
-package fr.epsi.gravarmor.model.coordinates;
+package main.fr.epsi.gravarmor.model.coordinates;
+
+import static main.fr.epsi.gravarmor.model.coordinates.Cube.lerp;
 
 public class HexaCoordinates {
 
@@ -45,9 +47,8 @@ public class HexaCoordinates {
 
         for(int i = 0; i <= distance; i++) {
 
-            Cube lerpResult = Cube.lerp(from.getCube(), to.getCube(), 1.0/distance * i);
-            System.err.println(lerpResult);
-            result[i] = new HexaCoordinates(Cube.round(lerpResult));
+            Cube lerpResult = Cube.lerp(from.getCube(), to.getCube(), 1f/distance * i);
+            result[i] = new HexaCoordinates(lerpResult);
         }
 
         return result;

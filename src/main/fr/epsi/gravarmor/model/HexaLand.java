@@ -1,6 +1,6 @@
-package fr.epsi.gravarmor.model;
+package main.fr.epsi.gravarmor.model;
 
-import fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 public class HexaLand {
 

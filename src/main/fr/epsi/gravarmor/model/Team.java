@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.model;
+package main.fr.epsi.gravarmor.model;
 
 import java.util.ArrayList;
 import java.util.List;

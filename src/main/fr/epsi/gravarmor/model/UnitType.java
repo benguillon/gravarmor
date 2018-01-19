@@ -1,4 +1,4 @@
-package fr.epsi.gravarmor.model;
+package main.fr.epsi.gravarmor.model;
 
 public enum UnitType {
     INFANTRY(2,3,2,7,3,WeaponType.MISSILES),
