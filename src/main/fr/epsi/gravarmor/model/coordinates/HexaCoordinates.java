@@ -1,7 +1,5 @@
 package main.fr.epsi.gravarmor.model.coordinates;
 
-import static main.fr.epsi.gravarmor.model.coordinates.Cube.lerp;
-
 public class HexaCoordinates {
 
     private Point point;
@@ -52,6 +50,27 @@ public class HexaCoordinates {
         }
 
         return result;
+    }
+
+    public static HexaCoordinates[] range(HexaCoordinates center,int taille) {
+        HexaCoordinates resultRange[] = new HexaCoordinates[taille+1];
+        int x = center.getCube().getX();
+        int y = center.getCube().getY();
+        int z = center.getCube().getZ();
+        int xmin = x-taille;
+        int xmax = x+taille;
+        int ymin = y-taille;
+        int ymax = y+taille;
+        int zmin = z-taille;
+        int zmax = z+taille;
+        for (int i=x;xmin < i && i < xmax;i++) {
+            for (int iy=y;Math.max(ymin,-x-zmax)<iy && iy<Math.min(ymax,-x-zmin);iy++) {
+                z = -x-y;
+                Cube rangeResult = new Cube(x, y, z);
+            }
+
+        }
+        return resultRange;
     }
 
     public String toString() {
