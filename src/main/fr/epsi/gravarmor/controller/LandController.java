@@ -8,12 +8,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
-
-import java.util.EventListener;
-
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_HEIGHT;
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_WIDTH;
 
@@ -100,6 +99,11 @@ class LandController {
                                 ae -> entityNode.setVisible(true))
                         ).play();
                     }
+
+                    entityNode.setFill(new ImagePattern(new Image("main/fr/epsi/gravarmor/icons/appIcon.png"), 0, 0, 100, 100, false));
+                    entityNode.setOnMouseClicked(event -> {
+                        box.getEntities().get(0).setSelected(true);
+                    });
                 }
             }
         }

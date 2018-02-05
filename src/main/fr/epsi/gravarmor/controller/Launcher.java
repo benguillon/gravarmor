@@ -12,10 +12,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class Launcher extends Application {
@@ -62,6 +67,7 @@ public class Launcher extends Application {
 
             LandController landController = new LandController(landPane, land);
             landController.setOnBoxClickCallback(coordinates -> {
+
                 System.out.println("Click  " + coordinates);
 
                 HexaCoordinates from = unit.getCoordinates();
@@ -69,7 +75,17 @@ public class Launcher extends Application {
 
                 System.out.println("Distance " + from + " -> " + to + " : " + HexaCoordinates.distance(from, to));
 
-                land.moveEntity(unit, coordinates);
+
+                if (unit.canMove(land.getBox(to).getType().getMovementPoints()) && unit.getSelected()) {
+                    land.moveEntity(unit, coordinates);
+                    unit.setSelected(false);
+                }
+
+                scene.setOnKeyReleased(event -> {
+                    if(event.getCode() == KeyCode.SPACE) {
+                        System.out.println("gg");
+                    }
+                });
 
                 HexaCoordinates path[] = HexaCoordinates.line(from, to);
                 System.out.println("Path " + from + " -> " + to + " : ");
