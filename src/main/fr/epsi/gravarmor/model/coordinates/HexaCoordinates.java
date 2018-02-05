@@ -1,5 +1,7 @@
 package main.fr.epsi.gravarmor.model.coordinates;
 
+import java.util.Arrays;
+
 public class HexaCoordinates {
 
     private Point point;
@@ -52,25 +54,30 @@ public class HexaCoordinates {
         return result;
     }
 
-    public static HexaCoordinates[] range(HexaCoordinates center,int taille) {
-        HexaCoordinates resultRange[] = new HexaCoordinates[taille+1];
-        int x = center.getCube().getX();
-        int y = center.getCube().getY();
-        int z = center.getCube().getZ();
-        int xmin = x-taille;
-        int xmax = x+taille;
-        int ymin = y-taille;
-        int ymax = y+taille;
-        int zmin = z-taille;
-        int zmax = z+taille;
-        for (int i=x;xmin < i && i < xmax;i++) {
-            for (int iy=y;Math.max(ymin,-x-zmax)<iy && iy<Math.min(ymax,-x-zmin);iy++) {
-                z = -x-y;
-                Cube rangeResult = new Cube(x, y, z);
-            }
+    public static HexaCoordinates[] range(HexaCoordinates center, int rayon) {
 
+        int size = 1;
+        for(int i = 1; i <= rayon; i++) {
+            size += i*6;
         }
-        return resultRange;
+
+        HexaCoordinates result[] = new HexaCoordinates[size];
+
+        System.out.println("N = " + rayon + " => Size = " + size);
+
+        int i = 0;
+
+        for(int dx = -rayon; dx <= rayon; dx++) {
+            for(int dy = Math.max(-rayon, -dx-rayon); dy <= Math.min(rayon, -dx+rayon); dy++) {
+                int dz = -dx-dy;
+                result[i] = new HexaCoordinates(Cube.add(center.getCube(), new Cube(dx, dy, dz)));
+                i++;
+            }
+        }
+
+        System.out.println("Results : " + Arrays.toString(result));
+
+        return result;
     }
 
     public String toString() {
