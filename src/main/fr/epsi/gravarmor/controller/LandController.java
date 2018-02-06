@@ -94,8 +94,13 @@ class LandController {
                             x + HEXA_WIDTH/2 - 5, y + HEXA_HEIGHT/2 + 5);
                     g.getChildren().add(entityNode);
 
-                    entityNode.setStroke(Color.RED);
-                    entityNode.setFill(Color.RED);
+                    if(entity.getTeam().getName() == "League") {
+                        entityNode.setStroke(Color.RED);
+                        entityNode.setFill(Color.RED);
+                    } else{
+                        entityNode.setStroke(Color.BLUE);
+                        entityNode.setFill(Color.BLUE);
+                    }
 
                     if(isFirstDrawing) {
                         entityNode.setVisible(false);
