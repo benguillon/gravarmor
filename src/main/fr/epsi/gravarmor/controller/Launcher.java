@@ -1,39 +1,29 @@
 package main.fr.epsi.gravarmor.controller;
 
-import main.fr.epsi.gravarmor.model.HexaLand;
-import main.fr.epsi.gravarmor.model.LandBox;
-import main.fr.epsi.gravarmor.model.Unit;
-import main.fr.epsi.gravarmor.model.UnitType;
-import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
-import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import main.fr.epsi.gravarmor.model.HexaLand;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class Launcher extends Application {
 
-    private HexaLand land;
     private WindowController windowController;
+    private GameLogic gameLogic;
 
     static final double HEXA_WIDTH = 30;
     static final double HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
 
     public void start(Stage stage) {
 
-        land = new HexaLand();
+        HexaLand land = new HexaLand();
 
         try {
             FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/windowView.fxml"));
@@ -56,46 +46,9 @@ public class Launcher extends Application {
             stage.getIcons().add(new Image("main/fr/epsi/gravarmor/icons/appIcon.png"));
             stage.show();
 
-
-            HexaCoordinates startUnitCoordinates = new HexaCoordinates(new Point(5,11));
-            Unit unit = new Unit(UnitType.INFANTRY);
-            unit.setCoordinates(startUnitCoordinates);
-            LandBox box = land.getBox(startUnitCoordinates);
-            box.getEntities().add(unit);
-
             ScrollPane landPane = (ScrollPane)windowView.lookup("#landPane");
-
-            LandController landController = new LandController(landPane, land);
-            landController.setOnBoxClickCallback(coordinates -> {
-
-                System.out.println("Click  " + coordinates);
-
-                HexaCoordinates from = unit.getCoordinates();
-                HexaCoordinates to = coordinates;
-
-                System.out.println("Distance " + from + " -> " + to + " : " + HexaCoordinates.distance(from, to));
-
-
-                if (unit.canMove(land.getBox(to).getType().getMovementPoints()) && unit.getSelected()) {
-                    land.moveEntity(unit, coordinates);
-                    unit.setSelected(false);
-                }
-
-                scene.setOnKeyReleased(event -> {
-                    if(event.getCode() == KeyCode.SPACE) {
-                        System.out.println("gg");
-                    }
-                });
-
-                HexaCoordinates path[] = HexaCoordinates.line(from, to);
-                System.out.println("Path " + from + " -> " + to + " : ");
-                for(int i = 0; i < path.length; i++) {
-                    System.out.println(path[i]);
-                    land.getBox(path[i]).isSelected(true);
-                }
-                landController.drawLand();
-            });
-            landController.drawLand();
+            gameLogic = new GameLogic(landPane, land);
+            gameLogic.start();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,6 +58,11 @@ public class Launcher extends Application {
     public void stop(){
 
         System.out.println("Stopping!");
+
+        if(gameLogic != null) {
+            gameLogic.stop();
+        }
+
         if(windowController != null) {
             windowController.stop();
         }
