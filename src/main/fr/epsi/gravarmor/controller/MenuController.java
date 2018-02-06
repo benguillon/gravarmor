@@ -1,7 +1,5 @@
 package main.fr.epsi.gravarmor.controller;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -15,8 +13,10 @@ import static javafx.scene.paint.Color.RED;
 
 public class MenuController {
 
-    public String consoleOutpout ="" ;
-    public int numeroEquipe =2;
+    private int logCounter;
+    private TextArea logArea;
+
+    public int numeroEquipe = 2;
 
     MenuController(ScrollPane scrollPane){
 
@@ -60,38 +60,37 @@ public class MenuController {
         Button boutonTirer = new Button("Tirer (F4)");
         boutonTirer.setPrefSize(140,50);
 
-        TextArea textConsole = new TextArea("\n"+consoleOutpout);
+        logArea = new TextArea();
+        logCounter = 0;
 
         boutonPasserLeTour.setOnAction(e -> {
-            consoleOutpout +="Fin du tour\n\n";
-            textConsole.setText(consoleOutpout);
-            textConsole.setScrollTop(textConsole.getHeight());
+            log("Fin du tour");
         });
 
         boutonAjouterUnPion.setOnAction(e -> {
-            consoleOutpout +="Pion ajouté\n\n";
-            textConsole.setText(consoleOutpout);
-            textConsole.setScrollTop(textConsole.getHeight());
+            log("Pion ajouté");
 
         });
 
-        textConsole.snappedBottomInset();
-        textConsole.scrollTopProperty();
-        textConsole.setWrapText(false);
-        textConsole.setEditable(false);
+        logArea.setWrapText(false);
+        logArea.setEditable(false);
 
         gridPane.add(textMainMenu,0,0);
         gridPane.add(boutonPasserLeTour,0,2);
         gridPane.add(boutonAjouterUnPion,0,3);
        // gridPane.add(boutonTirer,0,4);
         //gridPane.add(boutonDeplacer,1,4);
-        gridPane.add(textConsole,0,5);
+        gridPane.add(logArea,0,5);
 
         gridPane.setVgap(20);
         gridPane.setHgap(20);
 
     }
 
+    public void log(String text) {
 
+        logCounter++;
 
+        logArea.appendText("\n" + logCounter + ". " + text + "\n");
+    }
 }

@@ -37,7 +37,7 @@ public class Launcher extends Application {
             windowController.setStage(stage);
 
             ScrollPane menuPane = (ScrollPane) windowView.lookup("#menuPane");
-            new MenuController(menuPane);
+            MenuController menuController = new MenuController(menuPane);
 
             Scene scene = new Scene(windowView, (land.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, land.getHeight()*HEXA_HEIGHT+28+2);
 
@@ -55,7 +55,7 @@ public class Launcher extends Application {
             stage.show();
 
             ScrollPane landPane = (ScrollPane)windowView.lookup("#landPane");
-            gameLogic = new GameLogic(landPane, land);
+            gameLogic = new GameLogic(landPane, menuController, land);
             gameLogic.start();
         } catch (IOException e) {
             e.printStackTrace();

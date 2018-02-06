@@ -11,6 +11,7 @@ import java.util.List;
 public class GameLogic {
 
     private LandController landController;
+    private MenuController menuController;
     private HexaLand land;
 
     private Entity selectedEntity;
@@ -20,7 +21,7 @@ public class GameLogic {
     private boolean leaguePlacement = false;
     private boolean imperialPlacement = true;
 
-    public GameLogic(ScrollPane landPane, HexaLand land) {
+    public GameLogic(ScrollPane landPane, MenuController menuController, HexaLand land) {
         this.landController = new LandController(landPane, land);
         this.land = land;
 
