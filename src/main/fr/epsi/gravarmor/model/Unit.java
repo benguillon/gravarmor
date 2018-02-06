@@ -11,6 +11,7 @@ public class Unit extends Entity {
         super();
         actif = true;
         destroyed = false;
+        usedMovementPoints = 0;
         this.type = type;
     }
 

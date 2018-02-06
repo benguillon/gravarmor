@@ -6,7 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.fr.epsi.gravarmor.model.HexaLand;
@@ -20,6 +20,7 @@ public class Launcher extends Application {
 
     static final double HEXA_WIDTH = 30;
     static final double HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
+
 
     public void start(Stage stage) {
 
@@ -49,7 +50,6 @@ public class Launcher extends Application {
             ScrollPane landPane = (ScrollPane)windowView.lookup("#landPane");
             gameLogic = new GameLogic(landPane, land);
             gameLogic.start();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

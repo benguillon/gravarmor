@@ -69,7 +69,7 @@ class LandController {
                 }
 
                 polygonNode.setOnMouseClicked(event -> {
-                    System.out.println(coordinates + " : " + box + " " + coordinates.getCube());
+                    //System.out.println(coordinates + " : " + box + " " + coordinates.getCube());
 
                     if(boxClickCallback != null) boxClickCallback.handleEvent(coordinates);
                 });

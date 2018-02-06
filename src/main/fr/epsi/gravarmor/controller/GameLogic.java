@@ -1,18 +1,23 @@
 package main.fr.epsi.gravarmor.controller;
 
 import javafx.scene.control.ScrollPane;
-import main.fr.epsi.gravarmor.model.Entity;
-import main.fr.epsi.gravarmor.model.HexaLand;
+import main.fr.epsi.gravarmor.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameLogic {
 
-    ScrollPane landPane;
-    LandController landController;
-    HexaLand land;
+    private ScrollPane landPane;
+    private LandController landController;
+    private HexaLand land;
 
-    Entity selectedEntity;
+    private Entity selectedEntity;
+
+    private int compteurLeague = 0;
+    private int compteurImperial = 0;
+    private boolean leaguePlacement = false;
+    private boolean imperialPlacement = true;
 
     public GameLogic(ScrollPane landPane, HexaLand land) {
 
@@ -25,66 +30,72 @@ public class GameLogic {
 
     public void start() {
 
-        /*
-        HexaCoordinates startUnitCoordinates = new HexaCoordinates(new Point(5,11));
-        Unit unit = new Unit(UnitType.INFANTRY);
-        unit.setCoordinates(startUnitCoordinates);
-        LandBox box = land.getBox(startUnitCoordinates);
-        box.getEntities().add(unit);
-
-        HexaCoordinates startUnitCoordinates2 = new HexaCoordinates(new Point(8,11));
+        // CREATION DES TEAMS
+        Unit unit1 = new Unit(UnitType.INFANTRY);
         Unit unit2 = new Unit(UnitType.INFANTRY);
-        unit2.setCoordinates(startUnitCoordinates2);
-        LandBox box2 = land.getBox(startUnitCoordinates2);
-        box2.getEntities().add(unit2);
+        Unit unit3 = new Unit(UnitType.INFANTRY);
+        Unit unit4 = new Unit(UnitType.TANK);
+        Unit unit5 = new Unit(UnitType.TANK);
+        List<Entity> listImperial = new ArrayList<Entity>();
+        listImperial.add(unit1);
+        listImperial.add(unit2);
+        listImperial.add(unit3);
+        listImperial.add(unit4);
+        listImperial.add(unit5);
+        Team imperial = new Team("Imperial",listImperial);
 
-        landPane.setBackground(new Background(new BackgroundImage(new Image("main/fr/epsi/gravarmor/view/background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-        */
+        Unit unit6 = new Unit(UnitType.INFANTRY);
+        Unit unit7 = new Unit(UnitType.INFANTRY);
+        Unit unit8 = new Unit(UnitType.INFANTRY);
+        Unit unit9 = new Unit(UnitType.TANK);
+        Unit unit10 = new Unit(UnitType.TANK);
+        List<Entity> listLeague = new ArrayList<Entity>();
+        listLeague.add(unit6);
+        listLeague.add(unit7);
+        listLeague.add(unit8);
+        listLeague.add(unit9);
+        listLeague.add(unit10);
+        Team league = new Team("League",listLeague);
 
         landController.setOnBoxClickCallback(coordinates -> {
 
+            if(imperialPlacement){
+                System.out.println("Imperial place piece : " + compteurImperial);
+                listImperial.get(compteurImperial).setTeam(imperial);
+                land.placeEntity(listImperial.get(compteurImperial), coordinates);
+                compteurImperial ++;
+                if(compteurImperial == 5){
+                    imperialPlacement = false;
+                    leaguePlacement = true;
+                }
+                return;
+            }else if(leaguePlacement){
+                System.out.println("League place piece : " + compteurLeague);
+                listLeague.get(compteurLeague).setTeam(league);
+                land.placeEntity(listLeague.get(compteurLeague), coordinates);
+                compteurLeague ++;
+                if(compteurLeague == 5){
+                    leaguePlacement = false;
+                }
+                return;
+            }
+
+
             System.out.println("Click  " + coordinates);
 
-            if(selectedEntity == null) {
+            if (selectedEntity == null) {
 
                 List<Entity> entities = land.getBox(coordinates).getEntities();
-                if(entities.size() > 0) {
+                if (entities.size() > 0) {
                     selectedEntity = entities.get(0);
                     selectedEntity.setSelected(true);
-                    }
-            }
-            else {
+                }
+            } else {
 
                 land.moveEntity(selectedEntity, coordinates);
                 selectedEntity.setSelected(false);
                 selectedEntity = null;
             }
-
-            /*
-            HexaCoordinates from = unit.getCoordinates();
-            HexaCoordinates to = coordinates;
-
-            System.out.println("Distance " + from + " -> " + to + " : " + HexaCoordinates.distance(from, to));
-
-
-            if (unit.canMove(land.getBox(to).getType().getMovementPoints()) && unit.getSelected()) {
-                land.moveEntity(unit, coordinates);
-                unit.setSelected(false);
-            }
-
-            scene.setOnKeyReleased(event -> {
-                if(event.getCode() == KeyCode.SPACE) {
-                    System.out.println("gg");
-                }
-            });
-
-            HexaCoordinates path[] = HexaCoordinates.line(from, to);
-            System.out.println("Path " + from + " -> " + to + " : ");
-            for(int i = 0; i < path.length; i++) {
-                System.out.println(path[i]);
-                land.getBox(path[i]).isSelected(true);
-            }
-            */
 
             draw();
         });

@@ -28,4 +28,5 @@ public class Team {
     public void setListEntity(List<Entity> listEntity) {
         this.listEntity = listEntity;
     }
+
 }

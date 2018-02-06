@@ -9,6 +9,8 @@ public class Entity {
 
     private HexaCoordinates coordinates;
 
+    private Team team;
+
     public Entity() {
         isSelected = false;
     }
@@ -31,4 +33,11 @@ public class Entity {
         isSelected = selected;
     }
 
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
