@@ -26,13 +26,17 @@ public class Launcher extends Application {
 
         HexaLand land = new HexaLand();
 
+
         try {
             FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/windowView.fxml"));
             VBox windowView = windowLoader.load();
             windowController = windowLoader.getController();
             windowController.setStage(stage);
 
-            Scene scene = new Scene(windowView, (land.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+200, land.getHeight()*HEXA_HEIGHT+28+2);
+            ScrollPane menuPane = (ScrollPane) windowView.lookup("#menuPane");
+            new MenuController(menuPane);
+
+            Scene scene = new Scene(windowView, (land.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, land.getHeight()*HEXA_HEIGHT+28+2);
 
             if(Screen.getScreens().size() > 1) {
                 Screen screen = Screen.getScreens().get(1);

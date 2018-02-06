@@ -21,7 +21,7 @@
             <ScrollPane fx:id="landPane" BorderPane.alignment="CENTER" />
         </center>
         <right>
-            <Pane prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <ScrollPane fx:id="menuPane" prefWidth="310.0" />
         </right>
     </BorderPane>
     <stylesheets>
