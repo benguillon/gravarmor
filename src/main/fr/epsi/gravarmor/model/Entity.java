@@ -29,7 +29,7 @@ public class Entity {
         return isSelected;
     }
 
-    public void setSelected(Boolean selected) {
+    public void isSelected(Boolean selected) {
         isSelected = selected;
     }
 

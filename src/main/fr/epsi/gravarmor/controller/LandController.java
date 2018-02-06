@@ -1,18 +1,20 @@
 package main.fr.epsi.gravarmor.controller;
 
-import main.fr.epsi.gravarmor.model.*;
-import main.fr.epsi.gravarmor.model.callback.ICoordinatesLIstener;
-import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
-import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
+import main.fr.epsi.gravarmor.model.BoxType;
+import main.fr.epsi.gravarmor.model.Entity;
+import main.fr.epsi.gravarmor.model.HexaLand;
+import main.fr.epsi.gravarmor.model.LandBox;
+import main.fr.epsi.gravarmor.model.callback.ICoordinatesLIstener;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.Point;
+
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_HEIGHT;
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_WIDTH;
 
@@ -92,6 +94,9 @@ class LandController {
                             x + HEXA_WIDTH/2 - 5, y + HEXA_HEIGHT/2 + 5);
                     g.getChildren().add(entityNode);
 
+                    entityNode.setStroke(Color.RED);
+                    entityNode.setFill(Color.RED);
+
                     if(isFirstDrawing) {
                         entityNode.setVisible(false);
                         new Timeline(new KeyFrame(
@@ -100,9 +105,10 @@ class LandController {
                         ).play();
                     }
 
-                    entityNode.setFill(new ImagePattern(new Image("main/fr/epsi/gravarmor/icons/appIcon.png"), 0, 0, 100, 100, false));
                     entityNode.setOnMouseClicked(event -> {
-                        box.getEntities().get(0).setSelected(true);
+                        box.getEntities().get(0).isSelected(true);
+                        System.out.println(" Click unit : " + coordinates);
+                        if(boxClickCallback != null) boxClickCallback.handleEvent(coordinates);
                     });
                 }
             }

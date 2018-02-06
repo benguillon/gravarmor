@@ -1,7 +1,9 @@
 package main.fr.epsi.gravarmor.controller;
 
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SelectionMode;
 import main.fr.epsi.gravarmor.model.*;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,10 @@ public class GameLogic {
     private boolean imperialPlacement = true;
 
     public GameLogic(ScrollPane landPane, HexaLand land) {
-
-        this.landPane = landPane;
-        this.landController = new LandController(landPane, land);
+          this.landPane = landPane;
+         this.landController = new LandController(landPane, land);
         this.land = land;
+
 
         draw();
     }
@@ -42,7 +44,7 @@ public class GameLogic {
         listImperial.add(unit3);
         listImperial.add(unit4);
         listImperial.add(unit5);
-        Team imperial = new Team("Imperial",listImperial);
+        Team imperial = new Team("Imperial", listImperial);
 
         Unit unit6 = new Unit(UnitType.INFANTRY);
         Unit unit7 = new Unit(UnitType.INFANTRY);
@@ -55,33 +57,32 @@ public class GameLogic {
         listLeague.add(unit8);
         listLeague.add(unit9);
         listLeague.add(unit10);
-        Team league = new Team("League",listLeague);
+        Team league = new Team("League", listLeague);
 
         landController.setOnBoxClickCallback(coordinates -> {
 
-            if(imperialPlacement){
+            if (imperialPlacement) {
                 System.out.println("Imperial place piece : " + compteurImperial);
                 listImperial.get(compteurImperial).setTeam(imperial);
                 land.placeEntity(listImperial.get(compteurImperial), coordinates);
-                compteurImperial ++;
-                if(compteurImperial == 5){
+                compteurImperial++;
+                if (compteurImperial == 5) {
                     imperialPlacement = false;
                     leaguePlacement = true;
                 }
                 draw();
                 return;
-            }else if(leaguePlacement){
+            } else if (leaguePlacement) {
                 System.out.println("League place piece : " + compteurLeague);
                 listLeague.get(compteurLeague).setTeam(league);
                 land.placeEntity(listLeague.get(compteurLeague), coordinates);
-                compteurLeague ++;
-                if(compteurLeague == 5){
+                compteurLeague++;
+                if (compteurLeague == 5) {
                     leaguePlacement = false;
                 }
                 draw();
                 return;
             }
-
 
             System.out.println("Click  " + coordinates);
 
@@ -90,14 +91,30 @@ public class GameLogic {
                 List<Entity> entities = land.getBox(coordinates).getEntities();
                 if (entities.size() > 0) {
                     selectedEntity = entities.get(0);
-                    selectedEntity.setSelected(true);
+                    selectedEntity.isSelected(true);
+                    HexaCoordinates[] tab2 = HexaCoordinates.range(coordinates, ((Unit) selectedEntity).getType().getMovementPoints());
+                    for (int i = 0; i < tab2.length; i++) {
+
+                        try {
+                            LandBox box2 = land.getBox(tab2[i]);
+                            box2.isSelected(true);
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                        }
+                    }
                 }
             } else {
+                if (selectedEntity instanceof Unit) {
+                    HexaCoordinates from = selectedEntity.getCoordinates();
+                    HexaCoordinates to = coordinates;
+                    int distance = HexaCoordinates.distance(from, to);
 
-                land.moveEntity(selectedEntity, coordinates);
-                selectedEntity.setSelected(false);
-                    selectedEntity = null;
+                    if (((Unit) selectedEntity).canMove(((Unit) selectedEntity).getType().getMovementPoints(), distance)) {
+                        land.moveEntity(selectedEntity, coordinates);
+                        selectedEntity.isSelected(false);
+                        selectedEntity = null;
+                    }
                 }
+            }
 
             draw();
         });

@@ -51,17 +51,18 @@ public class Unit extends Entity {
         return type.toString();
     }
 
-    public boolean canMove(int mouvementPoint){
+    public boolean canMove(int mouvementPoint, int distance){
 //        int mouvementPoint = 0;
 //        for (LandBox l : landboxes) {
 //            mouvementPoint = mouvementPoint + l.getType().getMovementPoints();
 //        }
-        int pmRestant = this.type.getMovementPoints() - this.getMovementPoints();
-        if ( pmRestant >= mouvementPoint) {
-            this.setMovementPoints(0);
+//        int pmRestant = this.type.getMovementPoints() - this.getMovementPoints();
+        if ( mouvementPoint >= distance) {
+//            this.setMovementPoints(0);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
 

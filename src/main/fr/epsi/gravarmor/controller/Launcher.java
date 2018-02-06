@@ -1,5 +1,8 @@
 package main.fr.epsi.gravarmor.controller;
 
+import main.fr.epsi.gravarmor.model.*;
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;

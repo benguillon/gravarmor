@@ -46,7 +46,7 @@ public class HexaLand {
         }
     }
 
-    public LandBox getBox(HexaCoordinates coordinates) {
+    public LandBox getBox(HexaCoordinates coordinates) throws ArrayIndexOutOfBoundsException {
 
         return land[coordinates.getPoint().getY()][coordinates.getPoint().getX()];
     }
