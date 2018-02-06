@@ -68,6 +68,7 @@ public class GameLogic {
                     imperialPlacement = false;
                     leaguePlacement = true;
                 }
+                draw();
                 return;
             }else if(leaguePlacement){
                 System.out.println("League place piece : " + compteurLeague);
@@ -77,6 +78,7 @@ public class GameLogic {
                 if(compteurLeague == 5){
                     leaguePlacement = false;
                 }
+                draw();
                 return;
             }
 
@@ -94,8 +96,8 @@ public class GameLogic {
 
                 land.moveEntity(selectedEntity, coordinates);
                 selectedEntity.setSelected(false);
-                selectedEntity = null;
-            }
+                    selectedEntity = null;
+                }
 
             draw();
         });
