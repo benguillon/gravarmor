@@ -10,7 +10,6 @@ import java.util.List;
 
 public class GameLogic {
 
-    private ScrollPane landPane;
     private LandController landController;
     private HexaLand land;
 
@@ -22,8 +21,7 @@ public class GameLogic {
     private boolean imperialPlacement = true;
 
     public GameLogic(ScrollPane landPane, HexaLand land) {
-          this.landPane = landPane;
-         this.landController = new LandController(landPane, land);
+        this.landController = new LandController(landPane, land);
         this.land = land;
 
 
@@ -93,26 +91,27 @@ public class GameLogic {
                     selectedEntity = entities.get(0);
                     selectedEntity.isSelected(true);
                     HexaCoordinates[] tab2 = HexaCoordinates.range(coordinates, ((Unit) selectedEntity).getType().getMovementPoints());
-                    for (int i = 0; i < tab2.length; i++) {
+                    for (HexaCoordinates aTab2 : tab2) {
 
                         try {
-                            LandBox box2 = land.getBox(tab2[i]);
+                            LandBox box2 = land.getBox(aTab2);
                             box2.isSelected(true);
                         } catch (ArrayIndexOutOfBoundsException e) {
+                            /**/
                         }
                     }
                 }
-            } else {
-                if (selectedEntity instanceof Unit) {
-                    HexaCoordinates from = selectedEntity.getCoordinates();
-                    HexaCoordinates to = coordinates;
-                    int distance = HexaCoordinates.distance(from, to);
+            } else if (selectedEntity instanceof Unit) {
+                HexaCoordinates from = selectedEntity.getCoordinates();
+                int distance = HexaCoordinates.distance(from, coordinates);
 
-                    if (((Unit) selectedEntity).canMove(((Unit) selectedEntity).getType().getMovementPoints(), distance)) {
-                        land.moveEntity(selectedEntity, coordinates);
-                        selectedEntity.isSelected(false);
-                        selectedEntity = null;
-                    }
+                if (((Unit) selectedEntity).canMove(distance)) {
+                    land.moveEntity(selectedEntity, coordinates);
+                    selectedEntity.isSelected(false);
+                    selectedEntity = null;
+                } else {
+                    selectedEntity.isSelected(false);
+                    selectedEntity = null;
                 }
             }
 
@@ -124,7 +123,7 @@ public class GameLogic {
 
     }
 
-    public void draw() {
+    private void draw() {
         landController.drawLand();
     }
 }
