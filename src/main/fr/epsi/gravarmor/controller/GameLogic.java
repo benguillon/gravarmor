@@ -63,7 +63,7 @@ public class GameLogic {
             if (imperialPlacement) {
                 System.out.println("Imperial place piece : " + compteurImperial);
                 listImperial.get(compteurImperial).setTeam(imperial);
-                land.placeEntity(listImperial.get(compteurImperial), coordinates);
+                land.addEntity(listImperial.get(compteurImperial), coordinates);
                 compteurImperial++;
                 if (compteurImperial == 5) {
                     imperialPlacement = false;
@@ -74,7 +74,7 @@ public class GameLogic {
             } else if (leaguePlacement) {
                 System.out.println("League place piece : " + compteurLeague);
                 listLeague.get(compteurLeague).setTeam(league);
-                land.placeEntity(listLeague.get(compteurLeague), coordinates);
+                land.addEntity(listLeague.get(compteurLeague), coordinates);
                 compteurLeague++;
                 if (compteurLeague == 5) {
                     leaguePlacement = false;

@@ -74,9 +74,9 @@ public class HexaLand {
         return false;
     }
 
-    public void placeEntity(Entity entity, HexaCoordinates coordinates){
-        LandBox box = getBox(coordinates);
+    public void addEntity(Entity entity, HexaCoordinates to){
+        LandBox box = getBox(to);
         box.getEntities().add(entity);
-        entity.setCoordinates(coordinates);
+        entity.setCoordinates(to);
     }
 }
