@@ -3,7 +3,7 @@ package main.fr.epsi.gravarmor.model;
 
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
-public class Entity {
+public abstract class Entity {
 
     private Boolean isSelected;
 
