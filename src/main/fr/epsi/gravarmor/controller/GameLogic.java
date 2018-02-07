@@ -58,6 +58,7 @@ public class GameLogic {
         listImperial.add(new Unit(UnitType.INFANTRY));
         listImperial.add(new Unit(UnitType.TANK));
         listImperial.add(new Unit(UnitType.TANK));
+        listImperial.add(new Unit(UnitType.AIRPLANE));
         imperialTeam = new Team("Imperial", listImperial);
 
         List<Unit> listLeague = new ArrayList<>();
@@ -66,6 +67,7 @@ public class GameLogic {
         listLeague.add(new Unit(UnitType.INFANTRY));
         listLeague.add(new Unit(UnitType.TANK));
         listLeague.add(new Unit(UnitType.TANK));
+        listLeague.add(new Unit(UnitType.AIRPLANE));
         leagueTeam = new Team("League", listLeague);
 
 
@@ -200,7 +202,7 @@ public class GameLogic {
         land.getBox(coordinates).setType(CITY);
         draw();
 
-        menuController.log("Veuillez placer les 5 pionts de la team IMPERIAL (Bleu)");
+        menuController.log("Veuillez placer les " + imperialTeam.getListEntity().size() + " pionts de la team IMPERIAL (Bleu)");
         menuController.setEntityDescription(imperialTeam.getListEntity().get(0));
         menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
 
@@ -221,14 +223,14 @@ public class GameLogic {
             land.addEntity(entity, coordinates);
             compteurImperial++;
 
-            if (compteurImperial == 5) {
+            if (compteurImperial == imperialTeam.getListEntity().size()) {
                 imperialPlacement = false;
                 leaguePlacement = true;
-                menuController.log("Veuillez maintenant placer les 5 pionts de la team LEAGUE (Rouge) à distance des pionts adverses");
+                menuController.log("Veuillez maintenant placer les " + leagueTeam.getListEntity().size() + " pionts de la team LEAGUE (Rouge) à distance des pionts adverses");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(0));
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
             } else {
-                menuController.log("Reste " + (5-compteurImperial) + " pionts à placer");
+                menuController.log("Reste " + (imperialTeam.getListEntity().size()-compteurImperial) + " pionts à placer");
                 menuController.setEntityDescription(imperialTeam.getListEntity().get(compteurImperial));
             }
             draw();
@@ -249,7 +251,7 @@ public class GameLogic {
             land.addEntity(entity, coordinates);
             compteurLeague++;
 
-            if (compteurLeague == 5) {
+            if (compteurLeague == leagueTeam.getListEntity().size()) {
                 leaguePlacement = false;
                 menuController.log("Vous pouvez commencer à jouer");
                 menuController.getBoutonPasserLeTour().setDisable(false);
@@ -258,7 +260,7 @@ public class GameLogic {
                 menuController.setEntityDescription(null);
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
             } else {
-                menuController.log("Reste " + (5-compteurLeague) + " pionts à placer");
+                menuController.log("Reste " + (leagueTeam.getListEntity().size()-compteurLeague) + " pionts à placer");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(compteurLeague));
             }
 

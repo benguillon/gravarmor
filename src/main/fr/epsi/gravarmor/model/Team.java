@@ -1,6 +1,5 @@
 package main.fr.epsi.gravarmor.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Team {

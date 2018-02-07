@@ -6,13 +6,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 import main.fr.epsi.gravarmor.model.Entity;
-import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
 import main.fr.epsi.gravarmor.model.Unit;
+import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
 
 import java.io.IOException;
 
@@ -26,14 +25,12 @@ public class MenuController {
     private AnchorPane entityDescriptionView;
     private Text textEquipePlay;
 
-    public int numeroEquipe = 2;
     private Button boutonPasserLeTour;
     private Button boutonChangerMode;
 
     MenuController(ScrollPane scrollPane) throws IOException {
 
         GridPane gridPane = new GridPane();
-        Pane consolePane = new Pane();
         scrollPane.setContent(gridPane);
 
         Text textMainMenu = new Text("Menu du jeu");
@@ -67,8 +64,6 @@ public class MenuController {
         gridPane.add(textMainMenu,0,0);
         gridPane.add(boutonPasserLeTour,0,2);
         gridPane.add(boutonChangerMode,0,3);
-       // gridPane.add(boutonTirer,0,4);
-        //gridPane.add(boutonDeplacer,1,4);
         gridPane.add(logArea,0,5);
         gridPane.add(entityDescriptionView,0,6);
 

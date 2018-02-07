@@ -43,7 +43,7 @@ class LandController {
         Image imageAvionBlue = new Image("main/fr/epsi/gravarmor/icons/AvionBlue.png");
         Image imageCharRouge = new Image("main/fr/epsi/gravarmor/icons/CharRouge.png");
         Image imageCharBlue = new Image("main/fr/epsi/gravarmor/icons/CharBlue.png");
-        Image imageInfantryRougeImage = new Image("main/fr/epsi/gravarmor/icons/InfantryRouge.png");
+        Image imageInfantryRouge = new Image("main/fr/epsi/gravarmor/icons/InfantryRouge.png");
         Image imageInfantryBlue = new Image("main/fr/epsi/gravarmor/icons/InfantryBlue.png");
 
         for(int yl = 0; yl < land.getHeight(); yl++) {
@@ -132,16 +132,38 @@ class LandController {
 
                         if(entity instanceof Unit && entity.getTeam() != null) {
 
-                            switch (UnitType.INFANTRY){
-
-                            }
-
                             if (entity.getTeam().getName().equals("League")) {
                                 entityNode.setStroke(Color.RED);
-                                entityNode.setFill(new ImagePattern(imageAvionRouge));
+
+                                switch (((Unit) entity).getType()){
+                                    case INFANTRY:
+                                        entityNode.setFill(new ImagePattern(imageInfantryRouge));
+                                        break;
+
+                                    case TANK:
+                                        entityNode.setFill(new ImagePattern(imageCharRouge));
+                                        break;
+
+                                    case AIRPLANE:
+                                        entityNode.setFill(new ImagePattern(imageAvionRouge));
+                                        break;
+                                }
                             } else {
                                 entityNode.setStroke(Color.BLUE);
-                                entityNode.setFill(new ImagePattern(imageAvionBlue));
+
+                                switch (((Unit) entity).getType()){
+                                    case INFANTRY:
+                                        entityNode.setFill(new ImagePattern(imageInfantryBlue));
+                                        break;
+
+                                    case TANK:
+                                        entityNode.setFill(new ImagePattern(imageCharBlue));
+                                        break;
+
+                                    case AIRPLANE:
+                                        entityNode.setFill(new ImagePattern(imageAvionBlue));
+                                        break;
+                                }
                             }
                         }
 
