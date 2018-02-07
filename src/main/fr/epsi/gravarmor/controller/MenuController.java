@@ -12,6 +12,7 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 import main.fr.epsi.gravarmor.model.Entity;
 import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
+import main.fr.epsi.gravarmor.model.Unit;
 
 import java.io.IOException;
 
@@ -90,8 +91,21 @@ public class MenuController {
             return;
         }
 
-        ((Text) entityDescriptionView.lookup("#entityType")).setText(entity.toString());
-        ((Text) entityDescriptionView.lookup("#entityDescription")).setText(entity.toString());
+        String title = entity.toString();
+        if(entity.getTeam() != null) {
+            title += " (" + entity.getTeam().getName() + ")";
+        }
+
+        String entityDescription = "";
+        if(entity instanceof Unit) {
+            entityDescription += "Points de vie : " + ((Unit) entity).getType().getDefenseValue() + "\n";
+            entityDescription += "Points de mouvements : " + ((Unit) entity).getType().getMovementPoints() + "\n";
+            entityDescription += "Points d'attaque : " + ((Unit) entity).getType().getAttackValue() + "\n";
+            entityDescription += "Armes : " + ((Unit) entity).getType().getWeaponType() + "\n";
+        }
+
+        ((Text) entityDescriptionView.lookup("#entityType")).setText(title);
+        ((Text) entityDescriptionView.lookup("#entityDescription")).setText(entityDescription);
     }
 
     private void setEquipe (NumeroEquipe numeroEquipe) {
