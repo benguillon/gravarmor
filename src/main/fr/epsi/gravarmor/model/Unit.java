@@ -1,6 +1,8 @@
 package main.fr.epsi.gravarmor.model;
 
 
+import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+
 public class Unit extends Entity {
     private boolean actif;
     private boolean destroyed;
@@ -58,5 +60,12 @@ public class Unit extends Entity {
         } else {
             return false;
         }
+    }
+
+    public boolean canMoveTo(HexaCoordinates to){
+
+        int distance = HexaCoordinates.distance(getCoordinates(), to);
+
+        return canMove(distance);
     }
 }

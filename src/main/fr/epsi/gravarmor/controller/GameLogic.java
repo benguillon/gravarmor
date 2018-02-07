@@ -74,21 +74,16 @@ public class GameLogic {
             System.out.println("Click  " + coordinates);
 
             if (selectedEntity == null) {
+                return;
+            }
 
-                List<Entity> entities = land.getBox(coordinates).getEntities();
-                if (entities.size() > 0) {
-                    selectedEntity = entities.get(0);
-                }
-            } else if (selectedEntity instanceof Unit) {
-                HexaCoordinates from = selectedEntity.getCoordinates();
-                int distance = HexaCoordinates.distance(from, coordinates);
+            if (selectedEntity instanceof Unit) {
 
-                if (((Unit) selectedEntity).canMove(distance)) {
+                if (((Unit) selectedEntity).canMoveTo(coordinates)) {
                     land.moveEntity(selectedEntity, coordinates);
-                    selectedEntity = null;
-                } else {
-                    selectedEntity = null;
                 }
+
+                selectedEntity = null;
             }
 
             draw();
@@ -105,7 +100,14 @@ public class GameLogic {
                 return;
             }
 
+            System.out.println("Click on Entity " + coordinates + " : " + entity);
+
+            selectedEntity = entity;
+
+            draw();
         });
+
+        draw();
     }
 
     private void initGame(HexaCoordinates coordinates) {
