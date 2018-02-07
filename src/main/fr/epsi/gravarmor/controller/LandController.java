@@ -16,6 +16,7 @@ import main.fr.epsi.gravarmor.model.callback.ICoordinatesListener;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 import main.fr.epsi.gravarmor.model.coordinates.Point;
 
+import static javafx.scene.paint.Color.RED;
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_HEIGHT;
 import static main.fr.epsi.gravarmor.controller.Launcher.HEXA_WIDTH;
 
@@ -76,7 +77,7 @@ class LandController {
                 polygonNode.setFill(getFillPaintForType(box.getType()));
 
                 if (box.isGraphicallyHighlighted()) {
-                    polygonNode.setOpacity(0.5);
+                    polygonNode.setOpacity(0.3);
                     box.isGraphicallyHighlighted(false);
                 }
 
@@ -101,6 +102,11 @@ class LandController {
                     for (int i = 0; i < entityQuantity; i++) {
 
                         Entity entity = box.getEntities().get(i);
+
+                        if(entity.isGraphicallyHighlighted()) {
+                            polygonNode.setOpacity(0.3);
+                            entity.isGraphicallyHighlighted(false);
+                        }
 
                         Polygon entityNode = new Polygon();
 
@@ -135,7 +141,7 @@ class LandController {
                         if(entity instanceof Unit && entity.getTeam() != null) {
 
                             if (entity.getTeam().getName().equals("League")) {
-                                entityNode.setStroke(Color.RED);
+                                entityNode.setStroke(RED);
 
                                 switch (((Unit) entity).getType()){
                                     case INFANTRY:

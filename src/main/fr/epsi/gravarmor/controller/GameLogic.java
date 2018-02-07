@@ -86,6 +86,7 @@ public class GameLogic {
             if(imperialTurn){
                 imperialTurn = false;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
+                menuController.log("C'est au tour de l'équie Imperial (rouge)");
 
                 for (Unit aListImperial : listImperial) {
                     aListImperial.reinitMovementPoints();
@@ -94,6 +95,7 @@ public class GameLogic {
             else {
                 imperialTurn = true;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
+                menuController.log("C'est au tour de l'équie League (bleu)");
 
                 for (Unit aListLeague : listLeague) {
                     aListLeague.reinitMovementPoints();
@@ -109,10 +111,12 @@ public class GameLogic {
 
             if(gameMode == MOVE) {
                 gameMode = FIRE;
-                menuController.getBoutonChangerMode().setText("Passer en mode déplacement (f4)");
+                menuController.getBoutonChangerMode().setText("Passer en mode déplacement (F4)");
+                menuController.log("Vous pouvez maintenant déplacer les unités");
             } else if(gameMode == FIRE) {
                 gameMode = MOVE;
-                menuController.getBoutonChangerMode().setText("Passer en mode tire (f4)");
+                menuController.getBoutonChangerMode().setText("Passer en mode tire (F4)");
+                menuController.log("Vous pouvez maintenant tirer avec les unités");
             }
 
             draw();
@@ -150,10 +154,6 @@ public class GameLogic {
                 } else {
                     menuController.log("Déplacement impossible");
                 }
-
-
-                menuController.setEntityDescription(null);
-                selectedEntity = null;
             }
 
             if(gameMode == FIRE) {
@@ -168,6 +168,9 @@ public class GameLogic {
                     menuController.log("Tire impossible");
                 }
             }
+
+            menuController.setEntityDescription(null);
+            selectedEntity = null;
 
             draw();
         });
@@ -202,7 +205,7 @@ public class GameLogic {
         land.getBox(coordinates).setType(CITY);
         draw();
 
-        menuController.log("Veuillez placer les " + imperialTeam.getListEntity().size() + " pionts de la team IMPERIAL (Bleu)");
+        menuController.log("Veuillez placer les " + imperialTeam.getListEntity().size() + " unités de la team IMPERIAL (Bleu)");
         menuController.setEntityDescription(imperialTeam.getListEntity().get(0));
         menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
 
@@ -226,11 +229,11 @@ public class GameLogic {
             if (compteurImperial == imperialTeam.getListEntity().size()) {
                 imperialPlacement = false;
                 leaguePlacement = true;
-                menuController.log("Veuillez maintenant placer les " + leagueTeam.getListEntity().size() + " pionts de la team LEAGUE (Rouge) à distance des pionts adverses");
+                menuController.log("Veuillez maintenant placer les " + leagueTeam.getListEntity().size() + " unités de la team LEAGUE (Rouge) à distance des unités adverses");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(0));
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
             } else {
-                menuController.log("Reste " + (imperialTeam.getListEntity().size()-compteurImperial) + " pionts à placer");
+                menuController.log("Il reste " + (imperialTeam.getListEntity().size()-compteurImperial) + " unité(s) à placer");
                 menuController.setEntityDescription(imperialTeam.getListEntity().get(compteurImperial));
             }
             draw();
@@ -241,7 +244,7 @@ public class GameLogic {
 
             for (Unit unit : imperialTeam.getListEntity()) {
                 if(HexaCoordinates.distance(unit.getCoordinates(), coordinates) <= 4) {
-                    menuController.log("Le piont est trop prêt des pionts adverses");
+                    menuController.log("L'unité est trop proche des unités adverses");
                     return;
                 }
             }
@@ -253,14 +256,15 @@ public class GameLogic {
 
             if (compteurLeague == leagueTeam.getListEntity().size()) {
                 leaguePlacement = false;
-                menuController.log("Vous pouvez commencer à jouer");
+                menuController.log("-----");
+                menuController.log("L'équipe League (bleu) commence\nElle peut déplacer ses unités et les faire tirer sur les unités adverses");
                 menuController.getBoutonPasserLeTour().setDisable(false);
                 menuController.getBoutonChangerMode().setDisable(false);
                 gameMode = MOVE;
                 menuController.setEntityDescription(null);
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
             } else {
-                menuController.log("Reste " + (leagueTeam.getListEntity().size()-compteurLeague) + " pionts à placer");
+                menuController.log("Il reste " + (leagueTeam.getListEntity().size()-compteurLeague) + " unité(s) à placer");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(compteurLeague));
             }
 
@@ -323,8 +327,22 @@ public class GameLogic {
                     /**/
                 }
             }
+        }
 
+        if(selectedEntity != null) {
             selectedEntity.isGraphicallyHighlighted(true);
+        } else if(gameMode == MOVE || gameMode == FIRE) {
+
+            List<Unit> unitList;
+            if(imperialTurn) {
+                unitList = imperialTeam.getListEntity();
+            } else {
+                unitList = leagueTeam.getListEntity();
+            }
+
+            for (Unit unit: unitList) {
+                unit.isGraphicallyHighlighted(true);
+            }
         }
 
         landController.drawLand();
