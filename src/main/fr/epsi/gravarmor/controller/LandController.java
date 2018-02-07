@@ -120,7 +120,7 @@ class LandController {
                         g.getChildren().add(entityNode);
 
                         if(entity instanceof Unit && entity.getTeam() != null) {
-                            if (entity.getTeam().getName() == "League") {
+                            if (entity.getTeam().getName().equals("League")) {
                                 entityNode.setStroke(Color.RED);
                                 entityNode.setFill(Color.RED);
                             } else {

@@ -198,8 +198,15 @@ public class GameLogic {
 
     private void draw() {
 
-        if(selectedEntity != null) {
-            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), ((Unit) selectedEntity).getMovementPoints());
+        if(selectedEntity != null && selectedEntity instanceof Unit) {
+
+            int movementsPoints = ((Unit) selectedEntity).getMovementPoints();
+            if((imperialTurn && !selectedEntity.getTeam().getName().equals("Imperial")) ||
+                    (!imperialTurn && !selectedEntity.getTeam().getName().equals("League"))) {
+                movementsPoints = 0;
+            }
+
+            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
             for (HexaCoordinates position : positions) {
 
                 try {
