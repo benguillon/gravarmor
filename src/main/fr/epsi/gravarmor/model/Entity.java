@@ -11,8 +11,6 @@ public abstract class Entity {
 
     private Team team;
 
-    private boolean moved = false;
-
     public Entity() {
         isGraphicallyHighlighted = false;
     }
@@ -41,13 +39,5 @@ public abstract class Entity {
 
     public void setTeam(Team team) {
         this.team = team;
-    }
-
-    public boolean isMoved() {
-        return moved;
-    }
-
-    public void setMoved(boolean moved) {
-        this.moved = moved;
     }
 }

@@ -44,7 +44,7 @@ public class GameLogic {
     public void start() {
 
         // CREATION DES TEAMS
-        List<Entity> listImperial = new ArrayList<>();
+        List<Unit> listImperial = new ArrayList<>();
         listImperial.add(new Unit(UnitType.INFANTRY));
         listImperial.add(new Unit(UnitType.INFANTRY));
         listImperial.add(new Unit(UnitType.INFANTRY));
@@ -52,7 +52,7 @@ public class GameLogic {
         listImperial.add(new Unit(UnitType.TANK));
         imperialTeam = new Team("Imperial", listImperial);
 
-        List<Entity> listLeague = new ArrayList<>();
+        List<Unit> listLeague = new ArrayList<>();
         listLeague.add(new Unit(UnitType.INFANTRY));
         listLeague.add(new Unit(UnitType.INFANTRY));
         listLeague.add(new Unit(UnitType.INFANTRY));
@@ -70,14 +70,15 @@ public class GameLogic {
             if(imperialTurn == true){
                 imperialTurn = false;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
-                for(int i=0; i<listImperial.size(); i++){
-                    listImperial.get(i).setMoved(false);
+
+                for(int i = 0; i < listImperial.size(); i++){
+                    listImperial.get(i).reinitMovementPoints();
                 }
             } else if (imperialTurn == false){
                 imperialTurn = true;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
-                for(int i=0; i<listLeague.size(); i++){
-                    listLeague.get(i).setMoved(false);
+                for(int i = 0; i < listLeague.size(); i++){
+                    listImperial.get(i).reinitMovementPoints();
                 }
             }
         });
@@ -106,39 +107,21 @@ public class GameLogic {
 
             System.out.println("Click  " + coordinates);
 
-            if(imperialTurn){
-                if (selectedEntity == null) {
-                    return;
-                }
-
-                if (selectedEntity instanceof Unit) {
-
-                    if (((Unit) selectedEntity).canMoveTo(coordinates) && selectedEntity.getTeam() == imperialTeam && !selectedEntity.isMoved()) {
-                        land.moveEntity(selectedEntity, coordinates);
-                        selectedEntity.setMoved(true);
-                    }
-
-                    selectedEntity = null;
-                }
-            } else {
-                if (selectedEntity == null) {
-                    return;
-                }
-
-                if (selectedEntity instanceof Unit) {
-
-                    if (((Unit) selectedEntity).canMoveTo(coordinates) && selectedEntity.getTeam() == leagueTeam && !selectedEntity.isMoved()) {
-                        land.moveEntity(selectedEntity, coordinates);
-                        selectedEntity.setMoved(true);
-                    }
-
-                selectedEntity = null;
-                menuController.setEntityDescription(null);
-                    selectedEntity = null;
-                }
+            if (selectedEntity == null) {
+                return;
             }
 
+            int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
+            if (selectedEntity instanceof Unit &&
+                    ((Unit) selectedEntity).canMove(distance) &&
+                    ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
 
+                    land.moveEntity(selectedEntity, coordinates);
+                    ((Unit) selectedEntity).decreaseMovementPoints(distance);
+            }
+
+            menuController.setEntityDescription(null);
+            selectedEntity = null;
 
             draw();
         });
@@ -216,7 +199,7 @@ public class GameLogic {
     private void draw() {
 
         if(selectedEntity != null) {
-            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), ((Unit) selectedEntity).getType().getMovementPoints());
+            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), ((Unit) selectedEntity).getMovementPoints());
             for (HexaCoordinates position : positions) {
 
                 try {

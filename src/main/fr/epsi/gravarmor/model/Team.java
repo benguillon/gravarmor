@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Team {
     private String name;
-    private List<Entity> listEntity  = new ArrayList<Entity>();
+    private List<Unit> listEntity;
 
 
-    public Team(String name, List<Entity> listEntity) {
+    public Team(String name, List<Unit> listEntity) {
         this.name = name;
         this.listEntity = listEntity;
     }
@@ -21,11 +21,11 @@ public class Team {
         this.name = name;
     }
 
-    public List<Entity> getListEntity() {
+    public List<Unit> getListEntity() {
         return listEntity;
     }
 
-    public void setListEntity(List<Entity> listEntity) {
+    public void setListEntity(List<Unit> listEntity) {
         this.listEntity = listEntity;
     }
 

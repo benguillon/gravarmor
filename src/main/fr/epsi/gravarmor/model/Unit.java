@@ -6,14 +6,14 @@ import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 public class Unit extends Entity {
     private boolean actif;
     private boolean destroyed;
-    private int usedMovementPoints;
+    private int movementPoints;
     private UnitType type;
 
     public Unit(UnitType type) {
         super();
         actif = true;
         destroyed = false;
-        usedMovementPoints = 0;
+        movementPoints = type.getMovementPoints();
         this.type = type;
     }
 
@@ -33,12 +33,17 @@ public class Unit extends Entity {
         this.destroyed = destroyed;
     }
 
-    public int getMovementPoints() {
-        return usedMovementPoints;
+    public void reinitMovementPoints() {
+        movementPoints = type.getMovementPoints();
     }
 
-    public void setMovementPoints(int movementPoints) {
-        this.usedMovementPoints = movementPoints;
+    public void decreaseMovementPoints(int points) {
+        movementPoints -= points;
+        if(movementPoints < 0) movementPoints = 0;
+    }
+
+    public int getMovementPoints() {
+        return movementPoints;
     }
 
     public UnitType getType() {
@@ -55,7 +60,7 @@ public class Unit extends Entity {
 
     public boolean canMove(int distance){
 
-        return this.getType().getMovementPoints() >= distance;
+        return movementPoints >= distance;
     }
 
     public boolean canMoveTo(HexaCoordinates to){
