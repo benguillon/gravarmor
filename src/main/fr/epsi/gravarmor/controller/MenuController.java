@@ -26,6 +26,8 @@ public class MenuController {
     private AnchorPane entityDescriptionView;
     private Text textEquipePlay;
 
+    public int numeroEquipe = 2;
+    private Button boutonPasserLeTour;
 
     MenuController(ScrollPane scrollPane) throws IOException {
 
@@ -41,8 +43,8 @@ public class MenuController {
         textEquipePlay.setFont(new Font(17.5));
 
 
-        Button boutonPasserLeTour = new Button("Passer le tour (F2)");
-        boutonPasserLeTour.setPrefSize(140,50);
+        boutonPasserLeTour = new Button("Passer le tour (F2)");
+        getBoutonPasserLeTour().setPrefSize(140,50);
 
         Button boutonDeplacer = new Button("Déplacement (F3)");
         boutonDeplacer.setPrefSize(140,50);
@@ -55,7 +57,7 @@ public class MenuController {
         logArea.setEditable(false);
         logCounter = 0;
 
-        boutonPasserLeTour.setOnAction(e -> {
+        getBoutonPasserLeTour().setOnAction(e -> {
             log("Fin du tour");
         });
 
@@ -68,6 +70,8 @@ public class MenuController {
         gridPane.add(boutonPasserLeTour,0,2);
         gridPane.add(boutonTirer,0,3);
         gridPane.add(boutonDeplacer,1,3);
+       // gridPane.add(boutonTirer,0,4);
+        //gridPane.add(boutonDeplacer,1,4);
         gridPane.add(logArea,0,5);
         gridPane.add(entityDescriptionView,0,6);
 
@@ -123,5 +127,9 @@ public class MenuController {
                 break;
             }
         }
+    }
+
+    public Button getBoutonPasserLeTour() {
+        return boutonPasserLeTour;
     }
 }
