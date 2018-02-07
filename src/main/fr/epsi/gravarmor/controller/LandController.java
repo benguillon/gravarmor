@@ -4,7 +4,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 import main.fr.epsi.gravarmor.model.*;
@@ -37,6 +39,12 @@ class LandController {
     public void drawLand() {
 
         Group g = new Group();
+        Image imageAvionRouge = new Image("main/fr/epsi/gravarmor/icons/AvionRouge.png");
+        Image imageAvionBlue = new Image("main/fr/epsi/gravarmor/icons/AvionBlue.png");
+        Image imageCharRouge = new Image("main/fr/epsi/gravarmor/icons/CharRouge.png");
+        Image imageCharBlue = new Image("main/fr/epsi/gravarmor/icons/CharBlue.png");
+        Image imageInfantryRougeImage = new Image("main/fr/epsi/gravarmor/icons/InfantryRouge.png");
+        Image imageInfantryBlue = new Image("main/fr/epsi/gravarmor/icons/InfantryBlue.png");
 
         for(int yl = 0; yl < land.getHeight(); yl++) {
 
@@ -51,6 +59,7 @@ class LandController {
 
                 double x = -HEXA_WIDTH / 3 + xl * HEXA_WIDTH - xl * (HEXA_WIDTH / 4);
                 double y = -HEXA_HEIGHT / 2 + yl * HEXA_HEIGHT + (xl % 2 == 1 ? HEXA_HEIGHT / 2 : 0);
+
 
                 Polygon polygonNode = new Polygon();
                 polygonNode.getPoints().addAll(x + HEXA_WIDTH / 4, y + 0,
@@ -112,20 +121,27 @@ class LandController {
                             }
                         }
 
-                        entityNode.getPoints().addAll(tmpX + HEXA_WIDTH / 2 - 5, tmpY + HEXA_HEIGHT / 2 - 5,
-                                tmpX + HEXA_WIDTH / 2 + 5, tmpY + HEXA_HEIGHT / 2 - 5,
-                                tmpX + HEXA_WIDTH / 2 + 5, tmpY + HEXA_HEIGHT / 2 + 5,
-                                tmpX + HEXA_WIDTH / 2 - 5, tmpY + HEXA_HEIGHT / 2 + 5);
+                        entityNode.toFront();
+
+                        entityNode.getPoints().addAll(tmpX + HEXA_WIDTH / 2 - HEXA_WIDTH/4, tmpY + HEXA_HEIGHT / 2 - HEXA_WIDTH/4,
+                                tmpX + HEXA_WIDTH / 2 + HEXA_WIDTH/4, tmpY + HEXA_HEIGHT / 2 - HEXA_WIDTH/4,
+                                tmpX + HEXA_WIDTH / 2 + HEXA_WIDTH/4, tmpY + HEXA_HEIGHT / 2 + HEXA_WIDTH/4,
+                                tmpX + HEXA_WIDTH / 2 - HEXA_WIDTH/4, tmpY + HEXA_HEIGHT / 2 + HEXA_WIDTH/4);
 
                         g.getChildren().add(entityNode);
 
                         if(entity instanceof Unit && entity.getTeam() != null) {
+
+                            switch (UnitType.INFANTRY){
+
+                            }
+
                             if (entity.getTeam().getName().equals("League")) {
                                 entityNode.setStroke(Color.RED);
-                                entityNode.setFill(Color.RED);
+                                entityNode.setFill(new ImagePattern(imageAvionRouge));
                             } else {
                                 entityNode.setStroke(Color.BLUE);
-                                entityNode.setFill(Color.BLUE);
+                                entityNode.setFill(new ImagePattern(imageAvionBlue));
                             }
                         }
 
@@ -172,6 +188,7 @@ class LandController {
                 return Color.rgb(105, 142, 142);
 
             case CITY:
+
                 return Color.rgb(255, 50, 50);
 
             default:
