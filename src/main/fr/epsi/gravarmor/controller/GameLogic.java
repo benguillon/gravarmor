@@ -22,6 +22,7 @@ public class GameLogic {
     private int compteurImperial = 0;
     private boolean leaguePlacement = false;
     private boolean imperialPlacement = true;
+    private boolean imperialTurn = true;
 
     private Team imperialTeam;
     private Team leagueTeam;
@@ -61,6 +62,22 @@ public class GameLogic {
 
 
         // GESTION DES CLICKS
+        menuController.getBoutonPasserLeTour().setOnAction(e -> {
+            if(imperialTurn == true){
+                imperialTurn = false;
+                menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
+                for(int i=0; i<listImperial.size(); i++){
+                    listImperial.get(i).setMoved(false);
+                }
+            } else if (imperialTurn == false){
+                imperialTurn = true;
+                menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
+                for(int i=0; i<listLeague.size(); i++){
+                    listLeague.get(i).setMoved(false);
+                }
+            }
+        });
+
         landController.setOnBoxClickCallback(coordinates -> {
 
             if(hasAnimationRunning) return;
@@ -72,19 +89,39 @@ public class GameLogic {
 
             System.out.println("Click  " + coordinates);
 
-            if (selectedEntity == null) {
-                return;
-            }
-
-            if (selectedEntity instanceof Unit) {
-
-                if (((Unit) selectedEntity).canMoveTo(coordinates)) {
-                    land.moveEntity(selectedEntity, coordinates);
+            if(imperialTurn){
+                if (selectedEntity == null) {
+                    return;
                 }
+
+                if (selectedEntity instanceof Unit) {
+
+                    if (((Unit) selectedEntity).canMoveTo(coordinates) && ((Unit) selectedEntity).getTeam() == imperialTeam && !((Unit) selectedEntity).isMoved()) {
+                        land.moveEntity(selectedEntity, coordinates);
+                        ((Unit) selectedEntity).setMoved(true);
+                    }
+
+                    selectedEntity = null;
+                }
+            } else {
+                if (selectedEntity == null) {
+                    return;
+                }
+
+                if (selectedEntity instanceof Unit) {
+
+                    if (((Unit) selectedEntity).canMoveTo(coordinates) && ((Unit) selectedEntity).getTeam() == leagueTeam && !((Unit) selectedEntity).isMoved()) {
+                        land.moveEntity(selectedEntity, coordinates);
+                        ((Unit) selectedEntity).setMoved(true);
+                    }
 
                 selectedEntity = null;
                 menuController.setEntityDescription(null);
+                    selectedEntity = null;
+                }
             }
+
+
 
             draw();
         });
@@ -129,7 +166,6 @@ public class GameLogic {
                 menuController.log("Veuillez placer " + (5-compteurImperial) + " points de la team IMPERIAL (Bleu)");
                 menuController.setEntityDescription(imperialTeam.getListEntity().get(compteurImperial));
             }
-
             draw();
             return;
         }
@@ -145,6 +181,7 @@ public class GameLogic {
                 leaguePlacement = false;
                 menuController.log("Vous pouvez commencer à jouer");
                 menuController.setEntityDescription(null);
+                menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
             } else {
                 menuController.log("Veuillez placer " + (5-compteurLeague) + " points de la team LEAGUE (Rouge)");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(compteurLeague));
