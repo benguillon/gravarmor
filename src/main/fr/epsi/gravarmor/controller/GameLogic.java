@@ -62,9 +62,7 @@ public class GameLogic {
         // GESTION DES CLICKS
         landController.setOnBoxClickCallback(coordinates -> {
 
-            if(hasAnimationRunning) {
-                return;
-            }
+            if(hasAnimationRunning) return;
 
             if (imperialPlacement || leaguePlacement) {
                 initGame(coordinates);
@@ -91,9 +89,7 @@ public class GameLogic {
 
         landController.setOnEntityClickCallback((coordinates, entity) -> {
 
-            if(hasAnimationRunning) {
-                return;
-            }
+            if(hasAnimationRunning) return;
 
             if (imperialPlacement || leaguePlacement) {
                 initGame(coordinates);
