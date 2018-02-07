@@ -1,8 +1,9 @@
 package main.fr.epsi.gravarmor.model;
 
 public enum BoxType {
-    OUT(false, 1),
-    SAND(true, 1),
+    CITY(false, 0),
+    OUT(false, 0),
+    SAND(true, 0),
     QUICKSAND(true, 2),
     FOREST(true, 1),
     MONTAINS(false, 1),

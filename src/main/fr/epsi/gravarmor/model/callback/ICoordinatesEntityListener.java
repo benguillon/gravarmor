@@ -5,5 +5,5 @@ import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 public interface ICoordinatesEntityListener {
 
-    public void handleEvent(HexaCoordinates coordinates, Entity entity);
+    void handleEvent(HexaCoordinates coordinates, Entity entity);
 }

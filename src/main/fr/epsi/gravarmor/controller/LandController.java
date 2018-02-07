@@ -7,10 +7,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
-import main.fr.epsi.gravarmor.model.BoxType;
-import main.fr.epsi.gravarmor.model.Entity;
-import main.fr.epsi.gravarmor.model.HexaLand;
-import main.fr.epsi.gravarmor.model.LandBox;
+import main.fr.epsi.gravarmor.model.*;
 import main.fr.epsi.gravarmor.model.callback.ICoordinatesEntityListener;
 import main.fr.epsi.gravarmor.model.callback.ICoordinatesListener;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
@@ -122,12 +119,14 @@ class LandController {
 
                         g.getChildren().add(entityNode);
 
-                        if (entity.getTeam().getName() == "League") {
-                            entityNode.setStroke(Color.RED);
-                            entityNode.setFill(Color.RED);
-                        } else {
-                            entityNode.setStroke(Color.BLUE);
-                            entityNode.setFill(Color.BLUE);
+                        if(entity instanceof Unit && entity.getTeam() != null) {
+                            if (entity.getTeam().getName() == "League") {
+                                entityNode.setStroke(Color.RED);
+                                entityNode.setFill(Color.RED);
+                            } else {
+                                entityNode.setStroke(Color.BLUE);
+                                entityNode.setFill(Color.BLUE);
+                            }
                         }
 
                         entity.isGraphicallyHighlighted(false);
@@ -171,6 +170,9 @@ class LandController {
 
             case WATER:
                 return Color.rgb(105, 142, 142);
+
+            case CITY:
+                return Color.rgb(255, 50, 50);
 
             default:
                 return getColorForType(BoxType.WATER);

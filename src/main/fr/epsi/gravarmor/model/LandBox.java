@@ -40,6 +40,10 @@ public class LandBox {
         return type;
     }
 
+    public void setType(BoxType type) {
+        this.type = type;
+    }
+
     public List<Entity> getEntities() {
 
         return entities;

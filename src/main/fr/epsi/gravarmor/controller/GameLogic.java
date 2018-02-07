@@ -8,6 +8,8 @@ import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.fr.epsi.gravarmor.model.BoxType.CITY;
+
 public class GameLogic {
 
     private LandController landController;
@@ -21,8 +23,10 @@ public class GameLogic {
     private int compteurLeague = 0;
     private int compteurImperial = 0;
     private boolean leaguePlacement = false;
-    private boolean imperialPlacement = true;
+    private boolean imperialPlacement = false;
     private boolean imperialTurn = true;
+
+    private HexaCoordinates cityCoordinates;
 
     private Team imperialTeam;
     private Team leagueTeam;
@@ -56,9 +60,9 @@ public class GameLogic {
         listLeague.add(new Unit(UnitType.TANK));
         leagueTeam = new Team("League", listLeague);
 
-        menuController.log("Veuillez placer 5 points de la team IMPERIAL (Bleu)");
-        menuController.setEntityDescription(listImperial.get(0));
-        menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
+
+        menuController.log("Veuillez placer la ville");
+        menuController.setEntityDescription(null);
 
 
         // GESTION DES CLICKS
@@ -80,6 +84,19 @@ public class GameLogic {
 
         landController.setOnBoxClickCallback(coordinates -> {
 
+            if(cityCoordinates == null) {
+                cityCoordinates = coordinates;
+                land.getBox(coordinates).setType(CITY);
+                draw();
+
+                menuController.log("Veuillez placer 5 points de la team IMPERIAL (Bleu)");
+                menuController.setEntityDescription(listImperial.get(0));
+                menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
+
+                imperialPlacement = true;
+                return;
+            }
+
             if(hasAnimationRunning) return;
 
             if (imperialPlacement || leaguePlacement) {
@@ -96,9 +113,9 @@ public class GameLogic {
 
                 if (selectedEntity instanceof Unit) {
 
-                    if (((Unit) selectedEntity).canMoveTo(coordinates) && ((Unit) selectedEntity).getTeam() == imperialTeam && !((Unit) selectedEntity).isMoved()) {
+                    if (((Unit) selectedEntity).canMoveTo(coordinates) && selectedEntity.getTeam() == imperialTeam && !selectedEntity.isMoved()) {
                         land.moveEntity(selectedEntity, coordinates);
-                        ((Unit) selectedEntity).setMoved(true);
+                        selectedEntity.setMoved(true);
                     }
 
                     selectedEntity = null;
@@ -110,9 +127,9 @@ public class GameLogic {
 
                 if (selectedEntity instanceof Unit) {
 
-                    if (((Unit) selectedEntity).canMoveTo(coordinates) && ((Unit) selectedEntity).getTeam() == leagueTeam && !((Unit) selectedEntity).isMoved()) {
+                    if (((Unit) selectedEntity).canMoveTo(coordinates) && selectedEntity.getTeam() == leagueTeam && !selectedEntity.isMoved()) {
                         land.moveEntity(selectedEntity, coordinates);
-                        ((Unit) selectedEntity).setMoved(true);
+                        selectedEntity.setMoved(true);
                     }
 
                 selectedEntity = null;

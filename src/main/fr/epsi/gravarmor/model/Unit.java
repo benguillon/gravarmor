@@ -55,11 +55,7 @@ public class Unit extends Entity {
 
     public boolean canMove(int distance){
 
-        if ( this.getType().getMovementPoints() >= distance) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.getType().getMovementPoints() >= distance;
     }
 
     public boolean canMoveTo(HexaCoordinates to){
