@@ -1,13 +1,11 @@
 package main.fr.epsi.gravarmor.controller;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -20,7 +18,7 @@ public class Launcher extends Application {
     private WindowController windowController;
     private GameLogic gameLogic;
 
-    static double HEXA_WIDTH = 100;
+    static double HEXA_WIDTH = 45;
     static double HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
 
 

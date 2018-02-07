@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.fr.epsi.gravarmor.model.BoxType.CITY;
+import static main.fr.epsi.gravarmor.model.GameMode.*;
 
 public class GameLogic {
 
@@ -33,10 +34,13 @@ public class GameLogic {
     private Team imperialTeam;
     private Team leagueTeam;
 
+    private GameMode gameMode;
+
     GameLogic(ScrollPane landPane, MenuController menuController, HexaLand land) {
         this.landController = new LandController(landPane, land);
         this.menuController = menuController;
         this.land = land;
+        this.gameMode = GameMode.SET_CITY;
 
         hasAnimationRunning = false;
 
@@ -72,6 +76,11 @@ public class GameLogic {
 
         // GESTION DES CLICKS
         menuController.getBoutonPasserLeTour().setOnAction(e -> {
+
+            if(gameMode == SET_UNIT || gameMode == SET_CITY) {
+                return;
+            }
+
             if(imperialTurn){
                 imperialTurn = false;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
@@ -92,34 +101,35 @@ public class GameLogic {
             selectedEntity = null;
             draw();
         });
+        menuController.getBoutonPasserLeTour().setDisable(true);
+
+        menuController.getBoutonChangerMode().setOnAction(e -> {
+
+            if(gameMode == MOVE) {
+                gameMode = FIRE;
+                menuController.getBoutonChangerMode().setText("Passer en mode déplacement (f4)");
+            } else if(gameMode == FIRE) {
+                gameMode = MOVE;
+                menuController.getBoutonChangerMode().setText("Passer en mode tire (f4)");
+            }
+
+            draw();
+        });
+        menuController.getBoutonChangerMode().setDisable(true);
 
         landController.setOnBoxClickCallback(coordinates -> {
 
-            if(cityCoordinates == null) {
-
-                if(HexaCoordinates.distance(coordinates, centerCoordinates) > 2) {
-                    menuController.log("Veuillez placer la ville dans la zone mise en évidence");
-                    return;
-                }
-
-                cityCoordinates = coordinates;
-                land.getBox(coordinates).setType(CITY);
-                draw();
-
-                menuController.log("Veuillez placer les 5 pionts de la team IMPERIAL (Bleu)");
-                menuController.setEntityDescription(listImperial.get(0));
-                menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
-
-                imperialPlacement = true;
+            if(gameMode == GameMode.SET_CITY) {
+                setCity(coordinates);
+                return;
+            }
+            if (gameMode == GameMode.SET_UNIT) {
+                setUnit(coordinates);
                 return;
             }
 
             if(hasAnimationRunning) return;
 
-            if (imperialPlacement || leaguePlacement) {
-                initGame(coordinates);
-                return;
-            }
 
             System.out.println("Click  " + coordinates);
 
@@ -127,29 +137,47 @@ public class GameLogic {
                 return;
             }
 
-            int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
-            if (selectedEntity instanceof Unit &&
-                    ((Unit) selectedEntity).canMove(distance) &&
-                    ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
+            if(gameMode == MOVE) {
+                int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
+                if (selectedEntity instanceof Unit &&
+                        ((Unit) selectedEntity).canMove(distance) &&
+                        ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
 
                     land.moveEntity(selectedEntity, coordinates);
                     ((Unit) selectedEntity).decreaseMovementPoints(distance);
+                } else {
+                    menuController.log("Déplacement impossible");
+                }
+
+
+                menuController.setEntityDescription(null);
+                selectedEntity = null;
             }
 
-            menuController.setEntityDescription(null);
-            selectedEntity = null;
+            if(gameMode == FIRE) {
+                int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
+                if (selectedEntity instanceof Unit &&
+                        ((Unit) selectedEntity).canFire(distance) &&
+                        ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
+
+                    menuController.log("Tire effectué");
+
+                } else {
+                    menuController.log("Tire impossible");
+                }
+            }
 
             draw();
         });
 
         landController.setOnEntityClickCallback((coordinates, entity) -> {
 
-            if(hasAnimationRunning) return;
-
-            if (imperialPlacement || leaguePlacement) {
-                initGame(coordinates);
+            if (gameMode == GameMode.SET_UNIT) {
+                setUnit(coordinates);
                 return;
             }
+
+            if(hasAnimationRunning) return;
 
             System.out.println("Click on Entity " + coordinates + " : " + entity);
 
@@ -162,7 +190,28 @@ public class GameLogic {
         draw();
     }
 
-    private void initGame(HexaCoordinates coordinates) {
+    private void setCity(HexaCoordinates coordinates) {
+
+        if(HexaCoordinates.distance(coordinates, centerCoordinates) > 2) {
+            menuController.log("Veuillez placer la ville dans la zone mise en évidence");
+            return;
+        }
+
+        land.getBox(coordinates).setType(CITY);
+        draw();
+
+        menuController.log("Veuillez placer les 5 pionts de la team IMPERIAL (Bleu)");
+        menuController.setEntityDescription(imperialTeam.getListEntity().get(0));
+        menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
+
+        imperialPlacement = true;
+
+        gameMode = GameMode.SET_UNIT;
+        draw();
+        return;
+    }
+
+    private void setUnit(HexaCoordinates coordinates) {
 
         if (imperialPlacement) {
             System.out.println("Imperial place piece : " + compteurImperial);
@@ -203,6 +252,9 @@ public class GameLogic {
             if (compteurLeague == 5) {
                 leaguePlacement = false;
                 menuController.log("Vous pouvez commencer à jouer");
+                menuController.getBoutonPasserLeTour().setDisable(false);
+                menuController.getBoutonChangerMode().setDisable(false);
+                gameMode = MOVE;
                 menuController.setEntityDescription(null);
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
             } else {
@@ -221,7 +273,7 @@ public class GameLogic {
 
     public void draw() {
 
-        if(cityCoordinates == null) {
+        if(gameMode == SET_CITY) {
 
             HexaCoordinates[] positions = HexaCoordinates.range(centerCoordinates, 2);
             for (HexaCoordinates position : positions) {
@@ -235,7 +287,7 @@ public class GameLogic {
             }
         }
 
-        if(leaguePlacement) {
+        if(gameMode == SET_UNIT && leaguePlacement) {
             for (Unit unit: imperialTeam.getListEntity()) {
 
                 HexaCoordinates[] positions = HexaCoordinates.range(unit.getCoordinates(), 4);
@@ -251,7 +303,7 @@ public class GameLogic {
             }
         }
 
-        if(selectedEntity != null && selectedEntity instanceof Unit) {
+        if(gameMode == MOVE && selectedEntity != null && selectedEntity instanceof Unit) {
 
             int movementsPoints = ((Unit) selectedEntity).getMovementPoints();
             if((imperialTurn && !selectedEntity.getTeam().getName().equals("Imperial")) ||

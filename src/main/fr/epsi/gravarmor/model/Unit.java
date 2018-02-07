@@ -62,6 +62,10 @@ public class Unit extends Entity {
 
         return movementPoints >= distance;
     }
+    public boolean canFire(int distance){
+
+        return type.getAttackValue() >= distance;
+    }
 
     public boolean canMoveTo(HexaCoordinates to){
 

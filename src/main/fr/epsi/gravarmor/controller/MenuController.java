@@ -28,6 +28,7 @@ public class MenuController {
 
     public int numeroEquipe = 2;
     private Button boutonPasserLeTour;
+    private Button boutonChangerMode;
 
     MenuController(ScrollPane scrollPane) throws IOException {
 
@@ -43,14 +44,11 @@ public class MenuController {
         textEquipePlay.setFont(new Font(17.5));
 
 
-        boutonPasserLeTour = new Button("Passer le tour (F2)");
-        getBoutonPasserLeTour().setPrefSize(140,50);
+        boutonPasserLeTour = new Button("Terminer le tour (F2)");
+        boutonPasserLeTour.setPrefSize(140,50);
 
-        Button boutonDeplacer = new Button("Déplacement (F3)");
-        boutonDeplacer.setPrefSize(140,50);
-
-        Button boutonTirer = new Button("Tirer (F4)");
-        boutonTirer.setPrefSize(140,50);
+        boutonChangerMode = new Button("Passer en mode tire (f4)");
+        boutonChangerMode.setPrefSize(140,50);
 
         logArea = new TextArea();
         logArea.setWrapText(false);
@@ -68,8 +66,7 @@ public class MenuController {
         gridPane.add(textEquipePlay, 0, 1);
         gridPane.add(textMainMenu,0,0);
         gridPane.add(boutonPasserLeTour,0,2);
-        gridPane.add(boutonTirer,0,3);
-        gridPane.add(boutonDeplacer,1,3);
+        gridPane.add(boutonChangerMode,0,3);
        // gridPane.add(boutonTirer,0,4);
         //gridPane.add(boutonDeplacer,1,4);
         gridPane.add(logArea,0,5);
@@ -131,5 +128,9 @@ public class MenuController {
 
     public Button getBoutonPasserLeTour() {
         return boutonPasserLeTour;
+    }
+
+    public Button getBoutonChangerMode() {
+        return boutonChangerMode;
     }
 }
