@@ -67,7 +67,7 @@ class LandController {
                 polygonNode.setStroke(Color.WHITE);
                 polygonNode.setFill(getColorForType(box.getType()));
 
-                if(box.isGraphicallyHighlighted()) {
+                if (box.isGraphicallyHighlighted()) {
                     polygonNode.setOpacity(0.5);
                     box.isGraphicallyHighlighted(false);
                 }
@@ -75,11 +75,11 @@ class LandController {
                 polygonNode.setOnMouseClicked(event -> {
                     //System.out.println(coordinates + " : " + box + " " + coordinates.getCube());
 
-                    if(boxClickCallback != null) boxClickCallback.handleEvent(coordinates);
+                    if (boxClickCallback != null) boxClickCallback.handleEvent(coordinates);
                 });
 
                 Double duration = 1000 + xl * Math.random() * 200;
-                if(isFirstDrawing) {
+                if (isFirstDrawing) {
                     polygonNode.setVisible(false);
                     new Timeline(new KeyFrame(
                             Duration.millis(duration),
@@ -87,37 +87,64 @@ class LandController {
                     ).play();
                 }
 
-                for(Entity entity : box.getEntities()) {
+                int entityQuantity = box.getEntities().size();
+                if(entityQuantity <= 4) {
 
-                    Polygon entityNode = new Polygon();
-                    entityNode.getPoints().addAll(x + HEXA_WIDTH/2 - 5, y + HEXA_HEIGHT/2 - 5,
-                            x + HEXA_WIDTH/2 + 5, y + HEXA_HEIGHT/2 - 5,
-                            x + HEXA_WIDTH/2 + 5, y + HEXA_HEIGHT/2 + 5,
-                            x + HEXA_WIDTH/2 - 5, y + HEXA_HEIGHT/2 + 5);
-                    g.getChildren().add(entityNode);
+                    for (int i = 0; i < entityQuantity; i++) {
 
-                    if(entity.getTeam().getName() == "League") {
-                        entityNode.setStroke(Color.RED);
-                        entityNode.setFill(Color.RED);
-                    } else{
-                        entityNode.setStroke(Color.BLUE);
-                        entityNode.setFill(Color.BLUE);
+                        Entity entity = box.getEntities().get(i);
+
+                        Polygon entityNode = new Polygon();
+
+                        double tmpX = x;
+                        double tmpY = y;
+
+                        if(entityQuantity > 1) {
+                            if(i == 0 || i == 2) {
+                                tmpX = x - HEXA_WIDTH*0.3;
+                            } else {
+                                tmpX = x + HEXA_WIDTH*0.3;
+                            }
+                        }
+
+                        if(entityQuantity > 2) {
+                            if(i == 0 || i == 1) {
+                                tmpY = y - HEXA_WIDTH*0.3;
+                            } else {
+                                tmpY = y + HEXA_WIDTH*0.3;
+                            }
+                        }
+
+                        entityNode.getPoints().addAll(tmpX + HEXA_WIDTH / 2 - 5, tmpY + HEXA_HEIGHT / 2 - 5,
+                                tmpX + HEXA_WIDTH / 2 + 5, tmpY + HEXA_HEIGHT / 2 - 5,
+                                tmpX + HEXA_WIDTH / 2 + 5, tmpY + HEXA_HEIGHT / 2 + 5,
+                                tmpX + HEXA_WIDTH / 2 - 5, tmpY + HEXA_HEIGHT / 2 + 5);
+
+                        g.getChildren().add(entityNode);
+
+                        if (entity.getTeam().getName() == "League") {
+                            entityNode.setStroke(Color.RED);
+                            entityNode.setFill(Color.RED);
+                        } else {
+                            entityNode.setStroke(Color.BLUE);
+                            entityNode.setFill(Color.BLUE);
+                        }
+
+                        entity.isGraphicallyHighlighted(false);
+
+                        if (isFirstDrawing) {
+                            entityNode.setVisible(false);
+                            new Timeline(new KeyFrame(
+                                    Duration.millis(duration + 200),
+                                    ae -> entityNode.setVisible(true))
+                            ).play();
+                        }
+
+                        entityNode.setOnMouseClicked(event -> {
+                            System.out.println(" Click unit : " + coordinates);
+                            if (entityClickCallback != null) entityClickCallback.handleEvent(coordinates, entity);
+                        });
                     }
-
-                    entity.isGraphicallyHighlighted(false);
-
-                    if(isFirstDrawing) {
-                        entityNode.setVisible(false);
-                        new Timeline(new KeyFrame(
-                                Duration.millis(duration + 200),
-                                ae -> entityNode.setVisible(true))
-                        ).play();
-                    }
-
-                    entityNode.setOnMouseClicked(event -> {
-                        System.out.println(" Click unit : " + coordinates);
-                        if(entityClickCallback != null) entityClickCallback.handleEvent(coordinates, entity);
-                    });
                 }
             }
         }
