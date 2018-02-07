@@ -72,21 +72,25 @@ public class GameLogic {
 
         // GESTION DES CLICKS
         menuController.getBoutonPasserLeTour().setOnAction(e -> {
-            if(imperialTurn == true){
+            if(imperialTurn){
                 imperialTurn = false;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
 
-                for(int i = 0; i < listImperial.size(); i++){
-                    listImperial.get(i).reinitMovementPoints();
+                for (Unit aListImperial : listImperial) {
+                    aListImperial.reinitMovementPoints();
                 }
-            } else if (imperialTurn == false){
+            }
+            else {
                 imperialTurn = true;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
 
-                for(int i = 0; i < listLeague.size(); i++){
-                    listLeague.get(i).reinitMovementPoints();
+                for (Unit aListLeague : listLeague) {
+                    aListLeague.reinitMovementPoints();
                 }
             }
+
+            selectedEntity = null;
+            draw();
         });
 
         landController.setOnBoxClickCallback(coordinates -> {
