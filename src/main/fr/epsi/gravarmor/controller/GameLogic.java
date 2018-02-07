@@ -1,9 +1,7 @@
 package main.fr.epsi.gravarmor.controller;
 
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SelectionMode;
 import main.fr.epsi.gravarmor.model.*;
-import main.fr.epsi.gravarmor.model.callback.ICoordinatesEntityListener;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 import java.util.ArrayList;
@@ -57,6 +55,7 @@ public class GameLogic {
         leagueTeam = new Team("League", listLeague);
 
         menuController.log("Veuillez placer 5 points de la team IMPERIAL (Bleu)");
+        menuController.setEntityDescription(listImperial.get(0));
 
 
         // GESTION DES CLICKS
@@ -82,6 +81,7 @@ public class GameLogic {
                 }
 
                 selectedEntity = null;
+                menuController.setEntityDescription(null);
             }
 
             draw();
@@ -99,6 +99,7 @@ public class GameLogic {
             System.out.println("Click on Entity " + coordinates + " : " + entity);
 
             selectedEntity = entity;
+            menuController.setEntityDescription(selectedEntity);
 
             draw();
         });
@@ -120,8 +121,10 @@ public class GameLogic {
                 imperialPlacement = false;
                 leaguePlacement = true;
                 menuController.log("Veuillez placer 5 points de la team LEAGUE (Rouge)");
+                menuController.setEntityDescription(leagueTeam.getListEntity().get(0));
             } else {
                 menuController.log("Veuillez placer " + (5-compteurImperial) + " points de la team IMPERIAL (Bleu)");
+                menuController.setEntityDescription(imperialTeam.getListEntity().get(compteurImperial));
             }
 
             draw();
@@ -138,8 +141,10 @@ public class GameLogic {
             if (compteurLeague == 5) {
                 leaguePlacement = false;
                 menuController.log("Vous pouvez commencer à jouer");
+                menuController.setEntityDescription(null);
             } else {
                 menuController.log("Veuillez placer " + (5-compteurLeague) + " points de la team LEAGUE (Rouge)");
+                menuController.setEntityDescription(leagueTeam.getListEntity().get(compteurLeague));
             }
 
             draw();

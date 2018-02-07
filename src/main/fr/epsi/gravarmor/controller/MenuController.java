@@ -1,12 +1,17 @@
 package main.fr.epsi.gravarmor.controller;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
+import main.fr.epsi.gravarmor.model.Entity;
+
+import java.io.IOException;
 
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.RED;
@@ -15,10 +20,12 @@ public class MenuController {
 
     private int logCounter;
     private TextArea logArea;
+    private AnchorPane entityDescriptionView;
 
-    public int numeroEquipe = 2;
 
-    MenuController(ScrollPane scrollPane){
+    private int numeroEquipe = 2;
+
+    MenuController(ScrollPane scrollPane) throws IOException {
 
         GridPane gridPane = new GridPane();
         scrollPane.setContent(gridPane);
@@ -61,6 +68,8 @@ public class MenuController {
         boutonTirer.setPrefSize(140,50);
 
         logArea = new TextArea();
+        logArea.setWrapText(false);
+        logArea.setEditable(false);
         logCounter = 0;
 
         boutonPasserLeTour.setOnAction(e -> {
@@ -72,8 +81,9 @@ public class MenuController {
 
         });
 
-        logArea.setWrapText(false);
-        logArea.setEditable(false);
+        FXMLLoader entityDescription = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/entityDescription.fxml"));
+        entityDescriptionView = entityDescription.load();
+
 
         gridPane.add(textMainMenu,0,0);
         gridPane.add(boutonPasserLeTour,0,2);
@@ -81,6 +91,7 @@ public class MenuController {
        // gridPane.add(boutonTirer,0,4);
         //gridPane.add(boutonDeplacer,1,4);
         gridPane.add(logArea,0,5);
+        gridPane.add(entityDescriptionView,0,6);
 
         gridPane.setVgap(20);
         gridPane.setHgap(20);
@@ -92,5 +103,17 @@ public class MenuController {
         logCounter++;
 
         logArea.appendText("\n" + logCounter + ". " + text + "\n");
+    }
+
+    public void setEntityDescription(Entity entity) {
+
+        if(entity == null) {
+            ((Text) entityDescriptionView.lookup("#entityType")).setText("");
+            ((Text) entityDescriptionView.lookup("#entityDescription")).setText("");
+            return;
+        }
+
+        ((Text) entityDescriptionView.lookup("#entityType")).setText(entity.toString());
+        ((Text) entityDescriptionView.lookup("#entityDescription")).setText(entity.toString());
     }
 }
