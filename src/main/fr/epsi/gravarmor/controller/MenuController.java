@@ -6,10 +6,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 import main.fr.epsi.gravarmor.model.Entity;
+import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
 
 import java.io.IOException;
 
@@ -21,42 +23,22 @@ public class MenuController {
     private int logCounter;
     private TextArea logArea;
     private AnchorPane entityDescriptionView;
+    private Text textEquipePlay;
 
-
-    private int numeroEquipe = 2;
 
     MenuController(ScrollPane scrollPane) throws IOException {
 
         GridPane gridPane = new GridPane();
+        Pane consolePane = new Pane();
         scrollPane.setContent(gridPane);
 
         Text textMainMenu = new Text("Menu du jeu");
         textMainMenu.setFont(new Font(23));
         textMainMenu.setFontSmoothingType(FontSmoothingType.GRAY);
 
+        textEquipePlay = new Text();
+        textEquipePlay.setFont(new Font(17.5));
 
-            switch (numeroEquipe){
-                case 1:{
-                    Text textEquipePlay = new Text("Equipe Rouge");
-                    textEquipePlay.setFont(new Font(17.5));
-                    textEquipePlay.setFill(RED);
-                    gridPane.add(textEquipePlay,0,1);
-                    break;
-
-                }
-                case 2: {
-                    Text textEquipePlay = new Text("Equipe Bleue");
-                    textEquipePlay.setFont(new Font(17.5));
-                    textEquipePlay.setFill(BLUE);
-                    gridPane.add(textEquipePlay,0,1);
-                    break;
-
-                }
-                default: System.err.println("ERROR Equipe");
-        }
-
-        Button boutonAjouterUnPion = new Button("Ajouter un pion (F1)");
-        boutonAjouterUnPion.setPrefSize(140,50);
 
         Button boutonPasserLeTour = new Button("Passer le tour (F2)");
         boutonPasserLeTour.setPrefSize(140,50);
@@ -76,20 +58,15 @@ public class MenuController {
             log("Fin du tour");
         });
 
-        boutonAjouterUnPion.setOnAction(e -> {
-            log("Pion ajouté");
-
-        });
 
         FXMLLoader entityDescription = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/entityDescription.fxml"));
         entityDescriptionView = entityDescription.load();
 
-
+        gridPane.add(textEquipePlay, 0, 1);
         gridPane.add(textMainMenu,0,0);
         gridPane.add(boutonPasserLeTour,0,2);
-        gridPane.add(boutonAjouterUnPion,0,3);
-       // gridPane.add(boutonTirer,0,4);
-        //gridPane.add(boutonDeplacer,1,4);
+        gridPane.add(boutonTirer,0,3);
+        gridPane.add(boutonDeplacer,1,3);
         gridPane.add(logArea,0,5);
         gridPane.add(entityDescriptionView,0,6);
 
@@ -107,7 +84,7 @@ public class MenuController {
 
     public void setEntityDescription(Entity entity) {
 
-        if(entity == null) {
+        if (entity == null) {
             ((Text) entityDescriptionView.lookup("#entityType")).setText("");
             ((Text) entityDescriptionView.lookup("#entityDescription")).setText("");
             return;
@@ -115,5 +92,22 @@ public class MenuController {
 
         ((Text) entityDescriptionView.lookup("#entityType")).setText(entity.toString());
         ((Text) entityDescriptionView.lookup("#entityDescription")).setText(entity.toString());
+    }
+
+    private void setEquipe (NumeroEquipe numeroEquipe) {
+
+        switch (numeroEquipe) {
+            case EQUIPE_BLEU: {
+                textEquipePlay.setText("Equipe LEAGUE");
+                textEquipePlay.setFill(BLUE);
+                break;
+            }
+
+            case EQUIPE_ROUGE: {
+                textEquipePlay.setText("Equipe IMPERIAL ");
+                textEquipePlay.setFill(RED);
+                break;
+            }
+        }
     }
 }
