@@ -11,7 +11,8 @@ import main.fr.epsi.gravarmor.model.BoxType;
 import main.fr.epsi.gravarmor.model.Entity;
 import main.fr.epsi.gravarmor.model.HexaLand;
 import main.fr.epsi.gravarmor.model.LandBox;
-import main.fr.epsi.gravarmor.model.callback.ICoordinatesLIstener;
+import main.fr.epsi.gravarmor.model.callback.ICoordinatesEntityListener;
+import main.fr.epsi.gravarmor.model.callback.ICoordinatesListener;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 import main.fr.epsi.gravarmor.model.coordinates.Point;
 
@@ -25,7 +26,8 @@ class LandController {
 
     private boolean isFirstDrawing;
 
-    private ICoordinatesLIstener boxClickCallback;
+    private ICoordinatesListener boxClickCallback;
+    private ICoordinatesEntityListener entityClickCallback;
 
     LandController(ScrollPane pane, final HexaLand land) {
 
@@ -65,9 +67,9 @@ class LandController {
                 polygonNode.setStroke(Color.WHITE);
                 polygonNode.setFill(getColorForType(box.getType()));
 
-                if(box.isSelected()) {
-                    polygonNode.setOpacity(0.2);
-                    box.isSelected(false);
+                if(box.isGraphicallyHighlighted()) {
+                    polygonNode.setOpacity(0.5);
+                    box.isGraphicallyHighlighted(false);
                 }
 
                 polygonNode.setOnMouseClicked(event -> {
@@ -102,6 +104,8 @@ class LandController {
                         entityNode.setFill(Color.BLUE);
                     }
 
+                    entity.isGraphicallyHighlighted(false);
+
                     if(isFirstDrawing) {
                         entityNode.setVisible(false);
                         new Timeline(new KeyFrame(
@@ -111,9 +115,8 @@ class LandController {
                     }
 
                     entityNode.setOnMouseClicked(event -> {
-                        box.getEntities().get(0).isSelected(true);
                         System.out.println(" Click unit : " + coordinates);
-                        if(boxClickCallback != null) boxClickCallback.handleEvent(coordinates);
+                        if(entityClickCallback != null) entityClickCallback.handleEvent(coordinates, entity);
                     });
                 }
             }
@@ -147,8 +150,13 @@ class LandController {
         }
     }
 
-    public void setOnBoxClickCallback(ICoordinatesLIstener eventListener) {
+    public void setOnBoxClickCallback(ICoordinatesListener eventListener) {
 
         this.boxClickCallback = eventListener;
+    }
+
+    public void setOnEntityClickCallback(ICoordinatesEntityListener eventListener) {
+
+        this.entityClickCallback = eventListener;
     }
 }

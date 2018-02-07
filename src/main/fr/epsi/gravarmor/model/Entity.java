@@ -5,14 +5,14 @@ import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 public abstract class Entity {
 
-    private Boolean isSelected;
+    private Boolean isGraphicallyHighlighted;
 
     private HexaCoordinates coordinates;
 
     private Team team;
 
     public Entity() {
-        isSelected = false;
+        isGraphicallyHighlighted = false;
     }
 
     public void setCoordinates(HexaCoordinates coordinates) {
@@ -25,12 +25,12 @@ public abstract class Entity {
         return coordinates;
     }
 
-    public Boolean getSelected() {
-        return isSelected;
+    public Boolean isGraphicallyHighlighted() {
+        return isGraphicallyHighlighted;
     }
 
-    public void isSelected(Boolean selected) {
-        isSelected = selected;
+    public void isGraphicallyHighlighted(Boolean isGraphicallyHighlighted) {
+        this.isGraphicallyHighlighted = isGraphicallyHighlighted;
     }
 
     public Team getTeam() {

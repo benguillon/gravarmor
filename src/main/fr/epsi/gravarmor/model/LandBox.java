@@ -7,13 +7,15 @@ public class LandBox {
 
     private BoxType type;
     private List<Entity> entities;
-    private boolean isSelected;
+
+    private boolean isGraphicallyHighlighted;
 
     public LandBox(BoxType type) {
 
         this.type = type;
         this.entities = new ArrayList<>();
-        this.isSelected = false;
+
+        this.isGraphicallyHighlighted = false;
     }
 
     public LandBox(BoxType type, Entity entity) {
@@ -21,14 +23,16 @@ public class LandBox {
         this.type = type;
         this.entities = new ArrayList<>();
         this.entities.add(entity);
-        this.isSelected = false;
+
+        this.isGraphicallyHighlighted = false;
     }
 
     public LandBox(BoxType type, List<Entity> entities) {
 
         this.type = type;
         this.entities = entities;
-        this.isSelected = false;
+
+        this.isGraphicallyHighlighted = false;
     }
 
     public BoxType getType() {
@@ -41,14 +45,14 @@ public class LandBox {
         return entities;
     }
 
-    public boolean isSelected() {
+    public boolean isGraphicallyHighlighted() {
 
-        return isSelected;
+        return isGraphicallyHighlighted;
     }
 
-    public void isSelected(boolean isSelected) {
+    public void isGraphicallyHighlighted(boolean isGraphicallyHighlighted) {
 
-        this.isSelected = isSelected;
+        this.isGraphicallyHighlighted = isGraphicallyHighlighted;
     }
 
     public String toString() {

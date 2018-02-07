@@ -3,6 +3,7 @@ package main.fr.epsi.gravarmor.controller;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import main.fr.epsi.gravarmor.model.*;
+import main.fr.epsi.gravarmor.model.callback.ICoordinatesEntityListener;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
 
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ public class GameLogic {
     private MenuController menuController;
     private HexaLand land;
 
+    private boolean hasAnimationRunning;
+
     private Entity selectedEntity;
 
     private int compteurLeague = 0;
@@ -21,10 +24,15 @@ public class GameLogic {
     private boolean leaguePlacement = false;
     private boolean imperialPlacement = true;
 
-    public GameLogic(ScrollPane landPane, MenuController menuController, HexaLand land) {
+    private Team imperialTeam;
+    private Team leagueTeam;
+
+    GameLogic(ScrollPane landPane, MenuController menuController, HexaLand land) {
         this.landController = new LandController(landPane, land);
+        this.menuController = menuController;
         this.land = land;
 
+        hasAnimationRunning = false;
 
         draw();
     }
@@ -32,54 +40,34 @@ public class GameLogic {
     public void start() {
 
         // CREATION DES TEAMS
-        Unit unit1 = new Unit(UnitType.INFANTRY);
-        Unit unit2 = new Unit(UnitType.INFANTRY);
-        Unit unit3 = new Unit(UnitType.INFANTRY);
-        Unit unit4 = new Unit(UnitType.TANK);
-        Unit unit5 = new Unit(UnitType.TANK);
-        List<Entity> listImperial = new ArrayList<Entity>();
-        listImperial.add(unit1);
-        listImperial.add(unit2);
-        listImperial.add(unit3);
-        listImperial.add(unit4);
-        listImperial.add(unit5);
-        Team imperial = new Team("Imperial", listImperial);
+        List<Entity> listImperial = new ArrayList<>();
+        listImperial.add(new Unit(UnitType.INFANTRY));
+        listImperial.add(new Unit(UnitType.INFANTRY));
+        listImperial.add(new Unit(UnitType.INFANTRY));
+        listImperial.add(new Unit(UnitType.TANK));
+        listImperial.add(new Unit(UnitType.TANK));
+        imperialTeam = new Team("Imperial", listImperial);
 
-        Unit unit6 = new Unit(UnitType.INFANTRY);
-        Unit unit7 = new Unit(UnitType.INFANTRY);
-        Unit unit8 = new Unit(UnitType.INFANTRY);
-        Unit unit9 = new Unit(UnitType.TANK);
-        Unit unit10 = new Unit(UnitType.TANK);
-        List<Entity> listLeague = new ArrayList<Entity>();
-        listLeague.add(unit6);
-        listLeague.add(unit7);
-        listLeague.add(unit8);
-        listLeague.add(unit9);
-        listLeague.add(unit10);
-        Team league = new Team("League", listLeague);
+        List<Entity> listLeague = new ArrayList<>();
+        listLeague.add(new Unit(UnitType.INFANTRY));
+        listLeague.add(new Unit(UnitType.INFANTRY));
+        listLeague.add(new Unit(UnitType.INFANTRY));
+        listLeague.add(new Unit(UnitType.TANK));
+        listLeague.add(new Unit(UnitType.TANK));
+        leagueTeam = new Team("League", listLeague);
 
+        menuController.log("Veuillez placer 5 points de la team IMPERIAL (Bleu)");
+
+
+        // GESTION DES CLICKS
         landController.setOnBoxClickCallback(coordinates -> {
 
-            if (imperialPlacement) {
-                System.out.println("Imperial place piece : " + compteurImperial);
-                listImperial.get(compteurImperial).setTeam(imperial);
-                land.addEntity(listImperial.get(compteurImperial), coordinates);
-                compteurImperial++;
-                if (compteurImperial == 5) {
-                    imperialPlacement = false;
-                    leaguePlacement = true;
-                }
-                draw();
+            if(hasAnimationRunning) {
                 return;
-            } else if (leaguePlacement) {
-                System.out.println("League place piece : " + compteurLeague);
-                listLeague.get(compteurLeague).setTeam(league);
-                land.addEntity(listLeague.get(compteurLeague), coordinates);
-                compteurLeague++;
-                if (compteurLeague == 5) {
-                    leaguePlacement = false;
-                }
-                draw();
+            }
+
+            if (imperialPlacement || leaguePlacement) {
+                initGame(coordinates);
                 return;
             }
 
@@ -90,17 +78,6 @@ public class GameLogic {
                 List<Entity> entities = land.getBox(coordinates).getEntities();
                 if (entities.size() > 0) {
                     selectedEntity = entities.get(0);
-                    selectedEntity.isSelected(true);
-                    HexaCoordinates[] tab2 = HexaCoordinates.range(coordinates, ((Unit) selectedEntity).getType().getMovementPoints());
-                    for (HexaCoordinates aTab2 : tab2) {
-
-                        try {
-                            LandBox box2 = land.getBox(aTab2);
-                            box2.isSelected(true);
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            /**/
-                        }
-                    }
                 }
             } else if (selectedEntity instanceof Unit) {
                 HexaCoordinates from = selectedEntity.getCoordinates();
@@ -108,16 +85,68 @@ public class GameLogic {
 
                 if (((Unit) selectedEntity).canMove(distance)) {
                     land.moveEntity(selectedEntity, coordinates);
-                    selectedEntity.isSelected(false);
                     selectedEntity = null;
                 } else {
-                    selectedEntity.isSelected(false);
                     selectedEntity = null;
                 }
             }
 
             draw();
         });
+
+        landController.setOnEntityClickCallback((coordinates, entity) -> {
+
+            if(hasAnimationRunning) {
+                return;
+            }
+
+            if (imperialPlacement || leaguePlacement) {
+                initGame(coordinates);
+                return;
+            }
+
+        });
+    }
+
+    private void initGame(HexaCoordinates coordinates) {
+
+        if (imperialPlacement) {
+            System.out.println("Imperial place piece : " + compteurImperial);
+
+            Entity entity = imperialTeam.getListEntity().get(compteurImperial);
+            entity.setTeam(imperialTeam);
+            land.addEntity(entity, coordinates);
+            compteurImperial++;
+
+            if (compteurImperial == 5) {
+                imperialPlacement = false;
+                leaguePlacement = true;
+                menuController.log("Veuillez placer 5 points de la team LEAGUE (Rouge)");
+            } else {
+                menuController.log("Veuillez placer " + (5-compteurImperial) + " points de la team IMPERIAL (Bleu)");
+            }
+
+            draw();
+            return;
+        }
+        else if (leaguePlacement) {
+            System.out.println("League place piece : " + compteurLeague);
+
+            Entity entity = leagueTeam.getListEntity().get(compteurLeague);
+            entity.setTeam(leagueTeam);
+            land.addEntity(entity, coordinates);
+            compteurLeague++;
+
+            if (compteurLeague == 5) {
+                leaguePlacement = false;
+                menuController.log("Vous pouvez commencer à jouer");
+            } else {
+                menuController.log("Veuillez placer " + (5-compteurLeague) + " points de la team LEAGUE (Rouge)");
+            }
+
+            draw();
+            return;
+        }
     }
 
     public void stop() {
@@ -125,6 +154,22 @@ public class GameLogic {
     }
 
     private void draw() {
+
+        if(selectedEntity != null) {
+            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), ((Unit) selectedEntity).getType().getMovementPoints());
+            for (HexaCoordinates position : positions) {
+
+                try {
+                    LandBox box = land.getBox(position);
+                    box.isGraphicallyHighlighted(true);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    /**/
+                }
+            }
+
+            selectedEntity.isGraphicallyHighlighted(true);
+        }
+
         landController.drawLand();
     }
 }
