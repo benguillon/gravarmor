@@ -7,6 +7,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 import main.fr.epsi.gravarmor.model.*;
@@ -45,6 +46,7 @@ class LandController {
         Image imageCharBlue = new Image("main/fr/epsi/gravarmor/icons/CharBlue.png");
         Image imageInfantryRouge = new Image("main/fr/epsi/gravarmor/icons/InfantryRouge.png");
         Image imageInfantryBlue = new Image("main/fr/epsi/gravarmor/icons/InfantryBlue.png");
+        Image imageCity = new Image("main/fr/epsi/gravarmor/icons/City.png");
 
         for(int yl = 0; yl < land.getHeight(); yl++) {
 
@@ -71,7 +73,7 @@ class LandController {
                 g.getChildren().add(polygonNode);
 
                 polygonNode.setStroke(Color.WHITE);
-                polygonNode.setFill(getColorForType(box.getType()));
+                polygonNode.setFill(getFillPaintForType(box.getType()));
 
                 if (box.isGraphicallyHighlighted()) {
                     polygonNode.setOpacity(0.5);
@@ -191,7 +193,7 @@ class LandController {
         pane.setContent(g);
     }
 
-    private Color getColorForType(BoxType type) {
+    private Paint getFillPaintForType(BoxType type) {
 
         switch(type) {
             case SAND:
@@ -211,10 +213,10 @@ class LandController {
 
             case CITY:
 
-                return Color.rgb(255, 50, 50);
+                return new ImagePattern(new Image("main/fr/epsi/gravarmor/icons/City.png"));
 
             default:
-                return getColorForType(BoxType.WATER);
+                return getFillPaintForType(BoxType.WATER);
         }
     }
 
