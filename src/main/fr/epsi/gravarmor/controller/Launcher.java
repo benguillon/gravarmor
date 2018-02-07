@@ -1,14 +1,13 @@
 package main.fr.epsi.gravarmor.controller;
 
-import main.fr.epsi.gravarmor.model.*;
-import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
-import main.fr.epsi.gravarmor.model.coordinates.Point;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -21,8 +20,8 @@ public class Launcher extends Application {
     private WindowController windowController;
     private GameLogic gameLogic;
 
-    static final double HEXA_WIDTH = 30;
-    static final double HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
+    static double HEXA_WIDTH = 100;
+    static double HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
 
 
     public void start(Stage stage) {
@@ -33,6 +32,7 @@ public class Launcher extends Application {
         try {
             FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/windowView.fxml"));
             VBox windowView = windowLoader.load();
+
             windowController = windowLoader.getController();
             windowController.setStage(stage);
 
@@ -40,6 +40,12 @@ public class Launcher extends Application {
             MenuController menuController = new MenuController(menuPane);
 
             Scene scene = new Scene(windowView, (land.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, land.getHeight()*HEXA_HEIGHT+28+2);
+
+            scene.setOnZoom(event -> {
+                HEXA_WIDTH *= event.getZoomFactor();
+                HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
+                gameLogic.draw();
+            });
 
             if(Screen.getScreens().size() > 1) {
                 Screen screen = Screen.getScreens().get(1);
