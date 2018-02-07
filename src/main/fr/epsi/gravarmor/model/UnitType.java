@@ -1,8 +1,10 @@
 package main.fr.epsi.gravarmor.model;
 
 public enum UnitType {
-    INFANTRY(2,3,2,7,3,WeaponType.MISSILES),
-    TANK(4,4,6,4,4,WeaponType.MAGNETIC_BOLTS);
+    INFANTRY(2,3,2,7,3,WeaponType.MISSILES,false,false),
+    TANK(3,4,6,4,4,WeaponType.MAGNETIC_BOLTS, false, false),
+    AIRPLANE(4,3,6,8,3,WeaponType.MISSILES, true, true);
+
 
     private int movementPoints;
     private int electronicWarfare;
@@ -10,14 +12,18 @@ public enum UnitType {
     private int defenseValue;
     private int maximumRange;
     private WeaponType weaponType;
+    private boolean canGoOnWater;
+    private boolean canGoOnMountain;
 
-    UnitType(int movementPoints, int electronicWarfare, int attackValue, int defenseValue, int maximumRange, WeaponType weaponType) {
+    UnitType(int movementPoints, int electronicWarfare, int attackValue, int defenseValue, int maximumRange, WeaponType weaponType, boolean canGoOnWater, boolean canGoOnMountain) {
         this.movementPoints = movementPoints;
         this.electronicWarfare = electronicWarfare;
         this.attackValue = attackValue;
         this.defenseValue = defenseValue;
         this.maximumRange = maximumRange;
         this.weaponType = weaponType;
+        this.canGoOnWater = canGoOnWater;
+        this.canGoOnMountain = canGoOnWater;
     }
 
     public int getMovementPoints() {
