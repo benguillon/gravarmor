@@ -3,6 +3,7 @@ package main.fr.epsi.gravarmor.controller;
 import javafx.scene.control.ScrollPane;
 import main.fr.epsi.gravarmor.model.*;
 import main.fr.epsi.gravarmor.model.coordinates.HexaCoordinates;
+import main.fr.epsi.gravarmor.model.coordinates.NumeroEquipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class GameLogic {
 
         menuController.log("Veuillez placer 5 points de la team IMPERIAL (Bleu)");
         menuController.setEntityDescription(listImperial.get(0));
+        menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
 
 
         // GESTION DES CLICKS
@@ -122,6 +124,7 @@ public class GameLogic {
                 leaguePlacement = true;
                 menuController.log("Veuillez placer 5 points de la team LEAGUE (Rouge)");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(0));
+                menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
             } else {
                 menuController.log("Veuillez placer " + (5-compteurImperial) + " points de la team IMPERIAL (Bleu)");
                 menuController.setEntityDescription(imperialTeam.getListEntity().get(compteurImperial));

@@ -108,7 +108,7 @@ public class MenuController {
         ((Text) entityDescriptionView.lookup("#entityDescription")).setText(entityDescription);
     }
 
-    private void setEquipe (NumeroEquipe numeroEquipe) {
+    public void setEquipe (NumeroEquipe numeroEquipe) {
 
         switch (numeroEquipe) {
             case EQUIPE_BLEU: {
