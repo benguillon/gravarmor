@@ -108,13 +108,13 @@ public class MenuController {
 
         switch (numeroEquipe) {
             case EQUIPE_BLEU: {
-                textEquipePlay.setText("Equipe LEAGUE");
+                textEquipePlay.setText("Equipe IMPERIAL");
                 textEquipePlay.setFill(BLUE);
                 break;
             }
 
             case EQUIPE_ROUGE: {
-                textEquipePlay.setText("Equipe IMPERIAL ");
+                textEquipePlay.setText("Equipe LEAGUE ");
                 textEquipePlay.setFill(RED);
                 break;
             }
