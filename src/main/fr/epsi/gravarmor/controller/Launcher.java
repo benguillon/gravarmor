@@ -10,12 +10,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.fr.epsi.gravarmor.model.HexaLand;
+import main.fr.epsi.gravarmor.model.callback.OnNewGameCallback;
 
 import java.io.IOException;
 
 public class Launcher extends Application {
 
     private WindowController windowController;
+
+    private ScrollPane menuPane;
+    private ScrollPane landPane;
+
     private GameLogic gameLogic;
 
     static double HEXA_WIDTH = 45;
@@ -24,20 +29,19 @@ public class Launcher extends Application {
 
     public void start(Stage stage) {
 
-        HexaLand land = new HexaLand();
-
-
         try {
             FXMLLoader windowLoader = new FXMLLoader(getClass().getClassLoader().getResource("main/fr/epsi/gravarmor/view/fxml/windowView.fxml"));
             VBox windowView = windowLoader.load();
 
+            Scene scene = new Scene(windowView, (HexaLand.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, HexaLand.getHeight()*HEXA_HEIGHT+28+2);
+
             windowController = windowLoader.getController();
             windowController.setStage(stage);
 
-            ScrollPane menuPane = (ScrollPane) windowView.lookup("#menuPane");
-            MenuController menuController = new MenuController(menuPane);
+            windowController.setOnNewGameCallback(this::initMap);
 
-            Scene scene = new Scene(windowView, (land.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, land.getHeight()*HEXA_HEIGHT+28+2);
+            menuPane = (ScrollPane) windowView.lookup("#menuPane");
+            landPane = (ScrollPane)windowView.lookup("#landPane");
 
             scene.setOnZoom(event -> {
                 HEXA_WIDTH *= event.getZoomFactor();
@@ -58,7 +62,22 @@ public class Launcher extends Application {
             stage.getIcons().add(new Image("main/fr/epsi/gravarmor/icons/appIcon.png"));
             stage.show();
 
-            ScrollPane landPane = (ScrollPane)windowView.lookup("#landPane");
+            initMap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initMap() {
+
+        if(gameLogic != null) {
+            gameLogic.stop();
+        }
+
+        try {
+            MenuController menuController = new MenuController(menuPane);
+
+            HexaLand land = new HexaLand();
             gameLogic = new GameLogic(landPane, menuController, land);
             gameLogic.start();
         } catch (IOException e) {

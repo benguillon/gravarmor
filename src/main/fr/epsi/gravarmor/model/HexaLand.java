@@ -51,12 +51,12 @@ public class HexaLand {
         return land[coordinates.getPoint().getY()][coordinates.getPoint().getX()];
     }
 
-    public int getHeight() {
+    public static int getHeight() {
 
         return MAP.length;
     }
 
-    public int getWidth() {
+    public static int getWidth() {
 
         return MAP[0].length;
     }
