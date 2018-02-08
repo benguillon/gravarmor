@@ -32,6 +32,9 @@ public class MenuController {
 
         GridPane gridPane = new GridPane();
         scrollPane.setContent(gridPane);
+        scrollPane.setTranslateX(10);
+        scrollPane.setTranslateY(10);
+
 
         Text textMainMenu = new Text("Menu du jeu");
         textMainMenu.setFont(new Font(23));
@@ -41,15 +44,16 @@ public class MenuController {
         textEquipePlay.setFont(new Font(17.5));
 
 
-        boutonPasserLeTour = new Button("Terminer le tour (F2)");
+        boutonPasserLeTour = new Button("Terminer le tour ");
         boutonPasserLeTour.setPrefSize(140,50);
 
-        boutonChangerMode = new Button("Passer en mode tire (f4)");
+        boutonChangerMode = new Button("Passer en mode tire ");
         boutonChangerMode.setPrefSize(140,50);
 
         logArea = new TextArea();
-        logArea.setWrapText(false);
+        logArea.setWrapText(true);
         logArea.setEditable(false);
+        logArea.setPrefSize(290,200);
         logCounter = 0;
 
         getBoutonPasserLeTour().setOnAction(e -> {
