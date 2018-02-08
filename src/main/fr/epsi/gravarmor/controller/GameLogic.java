@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.fr.epsi.gravarmor.model.BoxType.CITY;
+import static main.fr.epsi.gravarmor.model.BoxType.OUT;
 import static main.fr.epsi.gravarmor.model.GameMode.*;
 
 public class GameLogic {
@@ -318,16 +319,35 @@ public class GameLogic {
                 movementsPoints = 0;
             }
 
-            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
-            for (HexaCoordinates position : positions) {
+            if(movementsPoints < 9999) {
 
-                if(((Unit) selectedEntity).canMove(land.nbPoints(position, selectedEntity.getCoordinates()))) {
+                HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
+                for (HexaCoordinates position : positions) {
 
                     try {
                         LandBox box = land.getBox(position);
-                        box.isGraphicallyHighlighted(true);
+
+                        if(((Unit) selectedEntity).canMove(land.nbPoints(position, selectedEntity.getCoordinates())) && box.getType() != OUT) {
+
+                                box.isGraphicallyHighlighted(true);
+                        }
                     } catch (ArrayIndexOutOfBoundsException e) {
                         /**/
+                    }
+                }
+
+            } else {
+
+                for(int y = 0; y < HexaLand.getHeight(); y++) {
+
+                    for (int x = 0; x < HexaLand.getWidth(); x++) {
+
+                        HexaCoordinates coordinates = new HexaCoordinates(new Point(x, y));
+                        LandBox box = land.getBox(coordinates);
+
+                        if(((Unit) selectedEntity).canMove(land.nbPoints(coordinates, selectedEntity.getCoordinates())) && box.getType() != OUT) {
+                            box.isGraphicallyHighlighted(true);
+                        }
                     }
                 }
             }

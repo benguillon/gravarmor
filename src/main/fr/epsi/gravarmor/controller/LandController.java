@@ -47,11 +47,10 @@ class LandController {
         Image imageCharBlue = new Image("main/fr/epsi/gravarmor/icons/CharBlue.png");
         Image imageInfantryRouge = new Image("main/fr/epsi/gravarmor/icons/InfantryRouge.png");
         Image imageInfantryBlue = new Image("main/fr/epsi/gravarmor/icons/InfantryBlue.png");
-        Image imageCity = new Image("main/fr/epsi/gravarmor/icons/City.png");
 
-        for(int yl = 0; yl < land.getHeight(); yl++) {
+        for(int yl = 0; yl < HexaLand.getHeight(); yl++) {
 
-            for (int xl = 0; xl < land.getWidth(); xl++) {
+            for (int xl = 0; xl < HexaLand.getWidth(); xl++) {
 
                 final HexaCoordinates coordinates = new HexaCoordinates(new Point(xl, yl));
                 final LandBox box = land.getBox(coordinates);

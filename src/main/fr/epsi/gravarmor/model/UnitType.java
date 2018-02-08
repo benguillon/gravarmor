@@ -3,7 +3,7 @@ package main.fr.epsi.gravarmor.model;
 public enum UnitType {
     INFANTRY(2,3,2,7,3,WeaponType.MISSILES,false,false),
     TANK(3,4,6,4,4,WeaponType.MAGNETIC_BOLTS, false, false),
-    AIRPLANE(4,3,6,8,3,WeaponType.MISSILES, true, true);
+    AIRPLANE(9999,3,6,8,3,WeaponType.MISSILES, true, true);
 
 
     private int movementPoints;
