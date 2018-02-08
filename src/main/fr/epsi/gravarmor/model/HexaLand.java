@@ -79,4 +79,17 @@ public class HexaLand {
         box.getEntities().add(entity);
         entity.setCoordinates(to);
     }
+
+    public int nbPoints(HexaCoordinates from, HexaCoordinates to) {
+
+        HexaCoordinates[] line = HexaCoordinates.line(from, to);
+
+        int nbPoints = 0;
+        for (int i = 1; i < line.length; i++) {
+
+            nbPoints += getBox(line[i]).getType().getMovementPoints();
+        }
+
+        return nbPoints;
+    }
 }

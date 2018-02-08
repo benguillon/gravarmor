@@ -144,13 +144,14 @@ public class GameLogic {
             }
 
             if(gameMode == MOVE) {
-                int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
+                int nbMovementsPoints = land.nbPoints(selectedEntity.getCoordinates(), coordinates);
+                System.out.println("Points -> " + nbMovementsPoints);
                 if (selectedEntity instanceof Unit &&
-                        ((Unit) selectedEntity).canMove(distance) &&
+                        ((Unit) selectedEntity).canMove(nbMovementsPoints) &&
                         ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
 
                     land.moveEntity(selectedEntity, coordinates);
-                    ((Unit) selectedEntity).decreaseMovementPoints(distance);
+                    ((Unit) selectedEntity).decreaseMovementPoints(nbMovementsPoints);
                 } else {
                     menuController.log("Déplacement impossible");
                 }
@@ -320,11 +321,14 @@ public class GameLogic {
             HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
             for (HexaCoordinates position : positions) {
 
-                try {
-                    LandBox box = land.getBox(position);
-                    box.isGraphicallyHighlighted(true);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    /**/
+                if(((Unit) selectedEntity).canMove(land.nbPoints(position, selectedEntity.getCoordinates()))) {
+
+                    try {
+                        LandBox box = land.getBox(position);
+                        box.isGraphicallyHighlighted(true);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        /**/
+                    }
                 }
             }
         }

@@ -58,19 +58,13 @@ public class Unit extends Entity {
         return type.toString();
     }
 
-    public boolean canMove(int distance){
-
-        return movementPoints >= distance;
-    }
     public boolean canFire(int distance){
 
         return type.getAttackValue() >= distance;
     }
 
-    public boolean canMoveTo(HexaCoordinates to){
+    public boolean canMove(int points){
 
-        int distance = HexaCoordinates.distance(getCoordinates(), to);
-
-        return canMove(distance);
+        return movementPoints >= points;
     }
 }

@@ -1,13 +1,13 @@
 package main.fr.epsi.gravarmor.model;
 
 public enum BoxType {
-    CITY(false, 0),
-    OUT(false, 0),
-    SAND(true, 0),
-    QUICKSAND(true, 2),
-    FOREST(true, 1),
-    MONTAINS(false, 1),
-    HIDDEN(false, 1),
+    CITY(false, 3),
+    OUT(false, 10000),
+    SAND(true, 1),
+    QUICKSAND(true, 1),
+    FOREST(true, 2),
+    MONTAINS(false, 3),
+    HIDDEN(false, 10000),
     WATER(false, 1);
 
     private boolean isAvailableForInterraction;
