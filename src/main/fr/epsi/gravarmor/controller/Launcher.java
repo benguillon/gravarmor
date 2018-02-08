@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.fr.epsi.gravarmor.model.HexaLand;
-import main.fr.epsi.gravarmor.model.callback.OnNewGameCallback;
 
 import java.io.IOException;
 
@@ -36,18 +35,26 @@ public class Launcher extends Application {
             Scene scene = new Scene(windowView, (HexaLand.getWidth()*HEXA_WIDTH*3/4)+HEXA_WIDTH/4+5+320, HexaLand.getHeight()*HEXA_HEIGHT+28+2);
 
             windowController = windowLoader.getController();
-            windowController.setStage(stage);
+            windowController.setParams(stage, this::initMap, () -> {
 
-            windowController.setOnNewGameCallback(this::initMap);
+                HEXA_WIDTH *= 1.2;
+                HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
+                gameLogic.draw();
+            }, () -> {
 
-            menuPane = (ScrollPane) windowView.lookup("#menuPane");
-            landPane = (ScrollPane)windowView.lookup("#landPane");
-
+                HEXA_WIDTH *= 1/1.2;
+                HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
+                gameLogic.draw();
+            });
             scene.setOnZoom(event -> {
                 HEXA_WIDTH *= event.getZoomFactor();
                 HEXA_HEIGHT = Math.sqrt(3)/2*HEXA_WIDTH;
                 gameLogic.draw();
             });
+
+            menuPane = (ScrollPane) windowView.lookup("#menuPane");
+            landPane = (ScrollPane)windowView.lookup("#landPane");
+
 
             if(Screen.getScreens().size() > 1) {
                 Screen screen = Screen.getScreens().get(1);

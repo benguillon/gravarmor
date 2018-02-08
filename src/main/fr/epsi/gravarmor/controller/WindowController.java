@@ -1,20 +1,21 @@
 package main.fr.epsi.gravarmor.controller;
 
 import javafx.stage.Stage;
-import main.fr.epsi.gravarmor.model.callback.OnNewGameCallback;
+import main.fr.epsi.gravarmor.model.callback.IEmptyListener;
 
 public class WindowController {
 
     private Stage stage;
 
-    private OnNewGameCallback onNewGameCallback;
+    private IEmptyListener onNewGameCallback;
+    private IEmptyListener onZoomMoreCallback;
+    private IEmptyListener onZoomLessCallback;
 
-    public void setStage(Stage stage) {
+    public void setParams(Stage stage, IEmptyListener onNewGameCallback, IEmptyListener onZoomMoreCallback, IEmptyListener onZoomLessCallback) {
         this.stage = stage;
-    }
-
-    public void setOnNewGameCallback(OnNewGameCallback onNewGameCallback) {
         this.onNewGameCallback = onNewGameCallback;
+        this.onZoomMoreCallback = onZoomMoreCallback;
+        this.onZoomLessCallback = onZoomLessCallback;
     }
 
     public void handleMenuActionNewGame(){
@@ -23,6 +24,20 @@ public class WindowController {
 
         if(onNewGameCallback != null) {
             onNewGameCallback.handleEvent();
+        }
+    }
+
+    public void handleMenuActionZoomMore(){
+
+        if(onZoomMoreCallback != null) {
+            onZoomMoreCallback.handleEvent();
+        }
+    }
+
+    public void handleMenuActionZoomLess(){
+
+        if(onZoomLessCallback != null) {
+            onZoomLessCallback.handleEvent();
         }
     }
 
