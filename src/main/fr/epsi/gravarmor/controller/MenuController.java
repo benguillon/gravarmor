@@ -47,7 +47,7 @@ public class MenuController {
         boutonPasserLeTour = new Button("Terminer le tour ");
         boutonPasserLeTour.setPrefSize(140,50);
 
-        boutonChangerMode = new Button("Passer en mode tire ");
+        boutonChangerMode = new Button("Passer en mode tir ");
         boutonChangerMode.setPrefSize(140,50);
 
         logArea = new TextArea();
