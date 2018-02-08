@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.fr.epsi.gravarmor.model.BoxType.CITY;
+import static main.fr.epsi.gravarmor.model.BoxType.OUT;
 import static main.fr.epsi.gravarmor.model.GameMode.*;
 
 public class GameLogic {
@@ -36,20 +37,21 @@ public class GameLogic {
 
     private GameMode gameMode;
 
+    private int nbTours;
+
     GameLogic(ScrollPane landPane, MenuController menuController, HexaLand land) {
         this.landController = new LandController(landPane, land);
         this.menuController = menuController;
         this.land = land;
-        this.gameMode = GameMode.SET_CITY;
-
-        hasAnimationRunning = false;
 
         centerCoordinates = new HexaCoordinates(new Point((land.getHeight()-1) /2, (land.getWidth()-1)/2));
-
-        draw();
     }
 
     public void start() {
+
+        this.gameMode = GameMode.SET_CITY;
+        hasAnimationRunning = false;
+        nbTours = 1;
 
         // CREATION DES TEAMS
         List<Unit> listImperial = new ArrayList<>();
@@ -72,7 +74,7 @@ public class GameLogic {
 
 
         menuController.log("Veuillez placer la ville dans le centre de la map");
-        menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
+        menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
         menuController.setEntityDescription(null);
 
 
@@ -86,7 +88,6 @@ public class GameLogic {
             if(imperialTurn){
                 imperialTurn = false;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
-                menuController.log("C'est au tour de l'équie Imperial (rouge)");
 
                 for (Unit aListImperial : listImperial) {
                     aListImperial.reinitMovementPoints();
@@ -95,12 +96,21 @@ public class GameLogic {
             else {
                 imperialTurn = true;
                 menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
-                menuController.log("C'est au tour de l'équie League (bleu)");
 
                 for (Unit aListLeague : listLeague) {
                     aListLeague.reinitMovementPoints();
                 }
+
+                nbTours++;
             }
+
+            if(nbTours >= 10) {
+                menuController.log("LA PARTIE EST TERMINEE");
+                draw();
+                return;
+            }
+
+            menuController.log("TOUR N°" + nbTours + "-" + ((imperialTurn)? "1": "2") + " : C'est au tour de l'équie " + ((imperialTurn)? "Imperial (bleu)" : "League (rouge)"));
 
             selectedEntity = null;
             draw();
@@ -206,7 +216,7 @@ public class GameLogic {
         land.getBox(coordinates).setType(CITY);
         draw();
 
-        menuController.log("Veuillez placer les " + imperialTeam.getListEntity().size() + " unités de la team IMPERIAL (Bleu)");
+        menuController.log("Veuillez placer les " + imperialTeam.getListEntity().size() + " unités de la team Imperial (Bleu)");
         menuController.setEntityDescription(imperialTeam.getListEntity().get(0));
         menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
 
@@ -230,7 +240,7 @@ public class GameLogic {
             if (compteurImperial == imperialTeam.getListEntity().size()) {
                 imperialPlacement = false;
                 leaguePlacement = true;
-                menuController.log("Veuillez maintenant placer les " + leagueTeam.getListEntity().size() + " unités de la team LEAGUE (Rouge) à distance des unités adverses");
+                menuController.log("Veuillez maintenant placer les " + leagueTeam.getListEntity().size() + " unités de la team League (Rouge) à distance des unités adverses");
                 menuController.setEntityDescription(leagueTeam.getListEntity().get(0));
                 menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
             } else {
@@ -258,7 +268,7 @@ public class GameLogic {
             if (compteurLeague == leagueTeam.getListEntity().size()) {
                 leaguePlacement = false;
                 menuController.log("-----");
-                menuController.log("L'équipe League (bleu) commence\nElle peut déplacer ses unités et les faire tirer sur les unités adverses");
+                menuController.log("TOUR N°1-1 : L'équipe Imperial (bleu) commence\nElle peut déplacer ses unités et les faire tirer sur les unités adverses");
                 menuController.getBoutonPasserLeTour().setDisable(false);
                 menuController.getBoutonChangerMode().setDisable(false);
                 gameMode = MOVE;
@@ -318,16 +328,35 @@ public class GameLogic {
                 movementsPoints = 0;
             }
 
-            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
-            for (HexaCoordinates position : positions) {
+            if(movementsPoints < 9999) {
 
-                if(((Unit) selectedEntity).canMove(land.nbPoints(position, selectedEntity.getCoordinates()))) {
+                HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), movementsPoints);
+                for (HexaCoordinates position : positions) {
 
                     try {
                         LandBox box = land.getBox(position);
-                        box.isGraphicallyHighlighted(true);
+
+                        if(((Unit) selectedEntity).canMove(land.nbPoints(position, selectedEntity.getCoordinates())) && box.getType() != OUT) {
+
+                                box.isGraphicallyHighlighted(true);
+                        }
                     } catch (ArrayIndexOutOfBoundsException e) {
                         /**/
+                    }
+                }
+
+            } else {
+
+                for(int y = 0; y < HexaLand.getHeight(); y++) {
+
+                    for (int x = 0; x < HexaLand.getWidth(); x++) {
+
+                        HexaCoordinates coordinates = new HexaCoordinates(new Point(x, y));
+                        LandBox box = land.getBox(coordinates);
+
+                        if(((Unit) selectedEntity).canMove(land.nbPoints(coordinates, selectedEntity.getCoordinates())) && box.getType() != OUT) {
+                            box.isGraphicallyHighlighted(true);
+                        }
                     }
                 }
             }

@@ -38,6 +38,9 @@ public class Unit extends Entity {
     }
 
     public void decreaseMovementPoints(int points) {
+
+        if(type == UnitType.AIRPLANE) points = 9999;
+
         movementPoints -= points;
         if(movementPoints < 0) movementPoints = 0;
     }
