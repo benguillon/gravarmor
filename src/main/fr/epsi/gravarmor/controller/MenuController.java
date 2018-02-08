@@ -94,9 +94,9 @@ public class MenuController {
 
         String entityDescription = "";
         if(entity instanceof Unit) {
-            entityDescription += "Points de vie : " + ((Unit) entity).getType().getDefenseValue() + "\n";
+            entityDescription += "Points de vie : " + ((Unit) entity).getLife() + "\n";
             entityDescription += "Points de mouvements : " + ((Unit) entity).getMovementPoints() + "\n";
-            entityDescription += "Points d'attaque : " + ((Unit) entity).getType().getAttackValue() + "\n";
+            entityDescription += "Distance d'attaque : " + ((Unit) entity).getType().getMaximumRange() + "\n";
             entityDescription += "Armes : " + ((Unit) entity).getType().getWeaponType() + "\n";
         }
 

@@ -22,6 +22,7 @@ public class GameLogic {
     private boolean hasAnimationRunning;
 
     private Entity selectedEntity;
+    private Entity selectedFire;
 
     private int compteurLeague = 0;
     private int compteurImperial = 0;
@@ -91,6 +92,7 @@ public class GameLogic {
 
                 for (Unit aListImperial : listImperial) {
                     aListImperial.reinitMovementPoints();
+                    aListImperial.reinitCanFire();
                 }
             }
             else {
@@ -99,6 +101,7 @@ public class GameLogic {
 
                 for (Unit aListLeague : listLeague) {
                     aListLeague.reinitMovementPoints();
+                    aListLeague.reinitCanFire();
                 }
 
                 nbTours++;
@@ -121,12 +124,16 @@ public class GameLogic {
 
             if(gameMode == MOVE) {
                 gameMode = FIRE;
-                menuController.getBoutonChangerMode().setText("Passer en mode déplacement (F4)");
-                menuController.log("Vous pouvez maintenant déplacer les unités");
+                menuController.getBoutonChangerMode().setText("Passer en mode tire (F4)");
+                menuController.log("l'équie Imperial (rouge) peut tirer Vous pouvez maintenant tirer avec les unités");
+
+                menuController.setEquipe(NumeroEquipe.EQUIPE_ROUGE);
             } else if(gameMode == FIRE) {
                 gameMode = MOVE;
-                menuController.getBoutonChangerMode().setText("Passer en mode tire (F4)");
-                menuController.log("Vous pouvez maintenant tirer avec les unités");
+                menuController.getBoutonChangerMode().setText("Passer en mode déplacement (F4)");
+                menuController.log("l'équie League peut se déplacer (bleu) Vous pouvez maintenant déplacer les unités");
+
+                menuController.setEquipe(NumeroEquipe.EQUIPE_BLEU);
             }
 
             draw();
@@ -167,21 +174,13 @@ public class GameLogic {
                 }
             }
 
-            if(gameMode == FIRE) {
-                int distance = HexaCoordinates.distance(selectedEntity.getCoordinates(), coordinates);
-                if (selectedEntity instanceof Unit &&
-                        ((Unit) selectedEntity).canFire(distance) &&
-                        ((imperialTurn && selectedEntity.getTeam() == imperialTeam) || (!imperialTurn && selectedEntity.getTeam() == leagueTeam))) {
-
-                    menuController.log("Tire effectué");
-
-                } else {
-                    menuController.log("Tire impossible");
-                }
+            if(gameMode == FIRE && selectedFire != null) {
+                menuController.log("Tire impossible");
             }
 
             menuController.setEntityDescription(null);
             selectedEntity = null;
+            selectedFire = null;
 
             draw();
         });
@@ -199,6 +198,25 @@ public class GameLogic {
 
             selectedEntity = entity;
             menuController.setEntityDescription(selectedEntity);
+
+            if(gameMode == FIRE) {
+                if (selectedEntity instanceof Unit) {
+                    if ((imperialTurn && selectedEntity.getTeam() == leagueTeam) || (!imperialTurn && selectedEntity.getTeam() == imperialTeam)) {
+                        selectedFire = selectedEntity;
+                    } else {
+                        if (selectedFire != null) {
+                            int distanceShoot = HexaCoordinates.distance(selectedFire.getCoordinates(), selectedEntity.getCoordinates());
+                            if (((Unit) selectedFire).canFire(distanceShoot)) {
+                                menuController.log("Tire effectué");
+                                ((Unit) selectedEntity).decreaseDefensePoints(1);
+                                selectedFire = null;
+                            } else {
+                                menuController.log("Tire impossible");
+                            }
+                        }
+                    }
+                }
+            }
 
             draw();
         });
@@ -358,6 +376,26 @@ public class GameLogic {
                             box.isGraphicallyHighlighted(true);
                         }
                     }
+                }
+            }
+        }
+
+        if(gameMode == FIRE && selectedEntity != null && selectedEntity instanceof Unit) {
+
+            int firepoint = ((Unit) selectedEntity).getType().getMaximumRange();
+            if((imperialTurn && selectedEntity.getTeam().getName().equals("Imperial")) ||
+                    (!imperialTurn && selectedEntity.getTeam().getName().equals("League"))) {
+                firepoint = 0;
+            }
+
+            HexaCoordinates[] positions = HexaCoordinates.range(selectedEntity.getCoordinates(), firepoint);
+            for (HexaCoordinates position : positions) {
+
+                try {
+                    LandBox box = land.getBox(position);
+                    box.isGraphicallyHighlighted(true);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    /**/
                 }
             }
         }
